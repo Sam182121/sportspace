@@ -1,0 +1,207 @@
+<div class="modal-overlay" id="modalReservaOverlay" onclick="cerrarModalReserva(event)">
+    <div class="modal" id="modalReserva">
+
+        <!-- CARRUSEL DE FOTOS (sin emoji, con flechas + zoom) -->
+        <div class="modal-carousel theme-f7" id="mCarousel">
+            <div class="carousel-track" id="mCarouselTrack"></div>
+
+            <button class="carousel-arrow left"  id="mArrowPrev" onclick="carruselMover(-1)" title="Anterior">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="carousel-arrow right" id="mArrowNext" onclick="carruselMover(1)" title="Siguiente">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button class="carousel-zoom" id="mZoomBtn" onclick="abrirZoom()" title="Ver en grande">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <div class="carousel-dots" id="mCarouselDots"></div>
+
+            <button class="modal-thumb-close" onclick="cerrarModalReserva()" title="Cerrar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+            <!-- STEPS -->
+            <div class="steps" id="mStepsBar">
+                <div class="step active" id="mStep1"><div class="step-dot">1</div><span>Info</span></div>
+                <div class="step-line" id="mLine1"></div>
+                <div class="step" id="mStep2"><div class="step-dot">2</div><span>Horario</span></div>
+                <div class="step-line" id="mLine2"></div>
+                <div class="step" id="mStep3"><div class="step-dot">3</div><span>Pago</span></div>
+                <div class="step-line" id="mLine3"></div>
+                <div class="step" id="mStep4"><div class="step-dot">✓</div><span>Listo</span></div>
+            </div>
+
+            <!-- PASO 1: INFO -->
+            <div class="mstep active" id="mstep-info">
+                <div class="modal-header-row">
+                    <div>
+                        <h2 id="mNombre">—</h2>
+                        <div class="modal-rating">
+                            <span id="mDeporteBadge" style="font-size:12px;color:var(--text3)">—</span>
+                            &nbsp;·&nbsp;
+                            <span id="mCapacidad" style="font-size:12px;color:var(--text3)"></span>
+                        </div>
+                    </div>
+                    <div class="price-badge">
+                        <div class="price-val" id="mPrecio">—</div>
+                        <div class="price-lbl">por hora</div>
+                    </div>
+                </div>
+
+                <div class="m-tags" id="mTags"></div>
+
+                <div class="info-grid">
+                    <div class="info-item"><label>Dirección</label><span id="mDireccion">—</span></div>
+                    <div class="info-item"><label>Distrito</label><span id="mDistrito">—</span></div>
+                    <div class="info-item"><label>Propietario</label><span id="mPropietario">—</span></div>
+                    <div class="info-item"><label>Contacto</label><span id="mContacto">—</span></div>
+                </div>
+
+                <p class="modal-desc" id="mDescripcion"></p>
+
+                <button class="btn btn-primary btn-block" onclick="mGoTo('horario')">
+                    Elegir horario
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </div>
+
+            <!-- PASO 2: HORARIO (calendario + grid tipo cine) -->
+            <div class="mstep" id="mstep-horario" style="display:none">
+                <button class="back-link" onclick="mGoTo('info')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Volver
+                </button>
+
+                <!-- Calendario mensual -->
+                <div class="calendar-box">
+                    <div class="calendar-header">
+                        <button class="cal-nav-btn" id="calPrevBtn" onclick="calCambiarMes(-1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <span class="cal-month-label" id="calMonthLabel">—</span>
+                        <button class="cal-nav-btn" id="calNextBtn" onclick="calCambiarMes(1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+                    </div>
+                    <div class="calendar-grid" id="calGrid"></div>
+                </div>
+
+                <!-- Grid de horarios tipo cine -->
+                <div class="subsec-label" style="margin-top:18px">Horarios disponibles</div>
+                <div class="horas-grid" id="mHorasWrap">
+                    <p style="font-size:12.5px;color:var(--text3);grid-column:1/-1">Selecciona una fecha en el calendario.</p>
+                </div>
+                <div class="horas-legend">
+                    <span><i class="leg-dot leg-libre"></i> Disponible</span>
+                    <span><i class="leg-dot leg-sel"></i> Elegido</span>
+                    <span><i class="leg-dot leg-ocupado"></i> Ocupado</span>
+                </div>
+
+                <div class="sel-resumen" id="mSelResumen" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span id="mResumenTexto">—</span>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="mBtnIrPago" disabled onclick="mGoTo('pago')">
+                    Reservar ahora
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </div>
+
+            <!-- PASO 3: PAGO -->
+            <div class="mstep" id="mstep-pago" style="display:none">
+                <button class="back-link" onclick="mGoTo('horario')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Volver
+                </button>
+
+                <!-- Resumen -->
+                <div class="pago-resumen">
+                    <h4>Resumen de reserva</h4>
+                    <div class="pago-row"><span>Cancha</span><span id="prCancha">—</span></div>
+                    <div class="pago-row"><span>Fecha</span><span id="prFecha">—</span></div>
+                    <div class="pago-row"><span>Hora</span><span id="prHora">—</span></div>
+                    <div class="pago-row total"><span>Total a pagar</span><span class="val-green" id="prTotal">—</span></div>
+                </div>
+
+                <!-- Selector de método -->
+                <div class="form-group">
+                    <label>¿Cómo vas a pagar?</label>
+                    <select class="form-select" id="selMetodoPago" onchange="onMetodoPagoChange()">
+                        <option value="">Selecciona un método…</option>
+                    </select>
+                </div>
+
+                <!-- Datos del propietario para ese método -->
+                <div id="metodosPagoWrap"></div>
+
+                <!-- Subir voucher (obligatorio salvo EFECTIVO) -->
+                <div class="form-group" id="voucherGroup" style="display:none">
+                    <label>Sube tu comprobante de pago <span style="color:var(--danger)">*</span></label>
+                    <div class="voucher-zone" id="voucherZone"
+                         onclick="document.getElementById('voucherInput').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag')"
+                         ondragleave="this.classList.remove('drag')"
+                         ondrop="handleVoucherDrop(event)">
+                        <input type="file" id="voucherInput" accept="image/*" style="display:none" onchange="handleVoucherFile(event)"/>
+                        <div id="voucherPreviewWrap">
+                            <div class="voucher-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                            </div>
+                            <div class="voucher-text" id="voucherLabel">Toca para subir tu comprobante<br/><small>JPG, PNG o PDF · Máx. 5 MB</small></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block success" id="mBtnConfirmar" disabled onclick="confirmarReserva()">
+                    Confirmar reserva
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+                <div id="mPagoError" style="display:none;margin-top:10px"></div>
+            </div>
+
+            <!-- PASO 4: CONFIRMACIÓN -->
+            <div class="mstep" id="mstep-listo" style="display:none">
+                <div class="confirm-box">
+                    <div class="confirm-circle">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h3>¡Reserva enviada!</h3>
+                    <p>Tu reserva quedó <strong>pendiente de aprobación</strong>.<br/>
+                        El propietario revisará tu comprobante y la confirmará pronto.</p>
+                </div>
+                <div class="confirm-note">
+                    Puedes ver el estado de tu reserva en <strong>Mis Reservas → Ver detalles</strong>.
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <a href="/cliente/reservas" class="btn btn-primary btn-block">
+                        Ver mis reservas
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                    <button class="btn btn-secondary" onclick="cerrarModalReserva()" style="width:100%">Cerrar</button>
+                </div>
+            </div>
+
+        </div><!-- /modal-body -->
+    </div><!-- /modal -->
+</div><!-- /overlay -->
+
+<!-- LIGHTBOX ZOOM DE FOTOS -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="cerrarZoom(event)">
+    <button class="lightbox-close" onclick="cerrarZoom()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="lightbox-arrow left" onclick="event.stopPropagation();carruselMover(-1,true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <img id="lightboxImg" src="" alt=""/>
+    <button class="lightbox-arrow right" onclick="event.stopPropagation();carruselMover(1,true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+</div>

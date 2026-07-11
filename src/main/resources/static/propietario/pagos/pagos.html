@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Pagos e Ingresos</title>
+    <link rel="stylesheet" href="/propietario/shared/propietario.css"/>
+    <link rel="stylesheet" href="/propietario/pagos/pagos.css"/>
+</head>
+<body>
+<div class="toast-container" id="toastContainer"></div>
+<div class="layout">
+    <div id="sidebar-container"></div>
+    <div class="main">
+        <header class="header">
+            <div class="header-left">
+                <button class="hamburger" id="hamburger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span>Propietario</span>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-page" id="bcPage">Pagos e Ingresos</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="notif-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </button>
+                <div class="user-dropdown-wrap" id="userDropdownWrap">
+                    <button class="header-user" id="headerUser">
+                        <div class="header-avatar" id="headerAvatar">P</div>
+                        <div class="header-user-info">
+                            <div class="header-user-name" id="headerName">—</div>
+                            <div class="header-user-role" id="headerRole">Propietario</div>
+                        </div>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-info">
+                            <div class="dropdown-info-name"  id="dropdownName">—</div>
+                            <div class="dropdown-info-role"  id="dropdownRole">—</div>
+                            <div class="dropdown-info-email" id="dropdownEmail">—</div>
+                        </div>
+                        <button class="dropdown-item danger" onclick="logout()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Cerrar sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="page-header-row">
+                <div>
+                    <h1>Pagos e Ingresos</h1>
+                    <p>Seguimiento de ingresos de tus canchas</p>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <select class="form-select" id="filtroPeriodo"
+                            style="height:36px;font-size:13px"
+                            onchange="cargarPagos()">
+                        <option value="mes">Este mes</option>
+                        <option value="semana">Esta semana</option>
+                        <option value="hoy">Hoy</option>
+                        <option value="3meses">Últimos 3 meses</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="exportarExcel()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjetas resumen -->
+            <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="stat-card">
+                    <div class="stat-label">Ingresos hoy</div>
+                    <div class="stat-val" id="statHoy">—</div>
+                    <div class="stat-sub" id="statHoySub">cargando...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Esta semana</div>
+                    <div class="stat-val" id="statSemana">—</div>
+                    <div class="stat-sub" id="statSemanaSub" style="color:var(--success)">—</div>
+                    <div class="progress-bar-wrap" style="margin-top:8px">
+                        <div class="progress-bar" id="barSemana" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Este mes</div>
+                    <div class="stat-val" id="statMes">—</div>
+                    <div class="stat-sub" id="statMesSub" style="color:var(--success)">—</div>
+                    <div class="progress-bar-wrap" style="margin-top:8px">
+                        <div class="progress-bar green" id="barMes" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pendientes de verificar</div>
+                    <div class="stat-val" id="statPendiente" style="color:var(--warning)">—</div>
+                    <div class="stat-sub" id="statPendienteSub">— vouchers</div>
+                </div>
+            </div>
+
+            <!-- Ingresos por cancha -->
+            <div class="chart-wrap">
+                <div class="chart-header">
+                    <h3 id="chartTitle">Ingresos por cancha</h3>
+                </div>
+                <div id="chartCanchas" class="chart-canchas-grid">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <!-- Últimos pagos -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Últimos pagos recibidos</h3>
+                    <span class="card-header-sub" id="periodoLabel">—</span>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Cancha</th>
+                            <th>Fecha</th>
+                            <th>Método</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaPagosTbody">
+                        <tr><td colspan="7">
+                            <div class="loading-state"><div class="spinner"></div> Cargando...</div>
+                        </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 SECCIÓN: Configurar Métodos de Pago
+                 ═══════════════════════════════════════════════════════════════ -->
+
+            <!-- Modal para editar/crear método de pago -->
+            <div class="modal-overlay" id="modalMetodoPago">
+                <div class="modal" style="max-width:460px">
+                    <div class="modal-header">
+                        <h3 id="modalMetodoPagoTitle">Configurar método de pago</h3>
+                        <button class="modal-close" onclick="closeModal('modalMetodoPago')">&times;</button>
+                    </div>
+                    <div class="modal-body" id="modalMetodoPagoBody"></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('modalMetodoPago')">Cancelar</button>
+                        <button class="btn btn-primary" id="btnGuardarMetodoPago" onclick="guardarMetodoPago()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de Métodos de Pago -->
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <div>
+                        <h3>Métodos de Pago</h3>
+                        <p style="font-size:12px;color:var(--text3);margin-top:2px">
+                            Configura cómo quieres recibir pagos. Los clientes verán estos datos al reservar tu cancha.
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body" style="padding:16px">
+                    <div id="metodosPagoContainer">
+                        <div class="loading-state"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSS inline para las tarjetas de métodos de pago -->
+            <style>
+                .mp-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                    gap: 14px;
+                }
+                .mp-card {
+                    border: 1.5px solid var(--border, #e5e7eb);
+                    border-radius: 12px;
+                    padding: 16px;
+                    background: var(#fff);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    transition: border-color .15s;
+                }
+                .mp-card.mp-activa { border-color: var(--success, #10b981); }
+                .mp-card-top {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mp-icon {
+                    width: 40px; height: 40px;
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                }
+                .mp-icon svg { width: 20px; height: 20px; }
+                .mp-info { flex: 1; }
+                .mp-label { font-weight: 700; font-size: 14px; color: var(--text); }
+                .mp-status { margin-top: 3px; }
+                .mp-datos {
+                    background: var(--bg3, #f8fafc);
+                    border-radius: 8px;
+                    padding: 10px 12px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+                .mp-dato {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12.5px;
+                    gap: 8px;
+                }
+                .mp-dato span { color: var(--text3, #6b7280); flex-shrink: 0; }
+                .mp-dato strong { color: var(--text, #1a1a2e); text-align: right; word-break: break-all; }
+                .mp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+                /* Reusar toggle del horarios.css si está disponible */
+                .toggle-switch { position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0 }
+                .toggle-switch input { opacity:0;width:0;height:0 }
+                .toggle-slider { position:absolute;cursor:pointer;inset:0;background:#d1d5db;border-radius:22px;transition:.2s }
+                .toggle-slider::before { content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s }
+                .toggle-switch input:checked + .toggle-slider { background:var(--success,#10b981) }
+                .toggle-switch input:checked + .toggle-slider::before { transform:translateX(18px) }
+            </style>
+        </div>
+    </div>
+</div>
+
+<!-- Modal detalle de pago / reembolso -->
+<div class="modal-overlay" id="modalDetallePago">
+    <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+            <h3>Detalle del pago</h3>
+            <button class="modal-close" onclick="closeModal('modalDetallePago')">✕</button>
+        </div>
+        <div class="modal-body" id="detallePagoBody" style="padding:20px"></div>
+        <div class="modal-footer" id="detallePagoFooter"></div>
+    </div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/shared/cloudinary.js"></script>   <!-- ← nuevo, después de api.js -->
+<script src="/propietario/shared/propietario.js"></script>
+<script src="/propietario/pagos/pagos.js"></script>
+</body>
+</html>

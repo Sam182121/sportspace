@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Recuperar contraseña</title>
+    <link rel="stylesheet" href="/auth/recuperar-contrasena/recuperar-contrasena.css">
+</head>
+<body>
+<div class="login-wrapper">
+
+    <!-- ── Panel izquierdo (igual al login) ─────────────────────────────── -->
+    <div class="login-left">
+        <div class="left-content">
+            <div class="left-logo">
+                <div class="left-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="2" y="7" width="20" height="14" rx="2"/>
+                        <path d="M12 7v14M2 14h20"/>
+                    </svg>
+                </div>
+                <h1>SportSpace</h1>
+            </div>
+            <p class="left-tagline">
+                Plataforma para la gestión y alquiler de canchas deportivas.
+            </p>
+            <div class="left-features">
+                <div class="left-feature">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div class="feat-text">
+                        <strong>Enlace seguro</strong>
+                        <span>Token único con expiración de 30 minutos</span>
+                    </div>
+                </div>
+                <div class="left-feature">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <div class="feat-text">
+                        <strong>Correo de recuperación</strong>
+                        <span>Recibirás el enlace en tu bandeja de entrada</span>
+                    </div>
+                </div>
+                <div class="left-feature">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="feat-text">
+                        <strong>Tu cuenta está segura</strong>
+                        <span>Si no solicitaste el cambio, ignora el correo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left-footer">SportSpace &copy; 2026</div>
+    </div>
+
+    <!-- ── Formulario derecho ────────────────────────────────────────────── -->
+    <div class="login-right">
+
+        <!-- Vista 1: Formulario para ingresar email -->
+        <div id="view-form">
+            <div class="form-heading">
+                <h2>¿Olvidaste tu contraseña?</h2>
+                <p>Ingresa tu correo y te enviaremos un enlace para restablecerla</p>
+            </div>
+
+            <div id="rc-alert"></div>
+
+            <div class="form-group">
+                <label>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Correo electrónico
+                </label>
+                <input
+                        type="email"
+                        id="rc-email"
+                        placeholder="usuario@correo.com"
+                        autocomplete="email"
+                />
+            </div>
+
+            <button class="btn-submit" id="btn-enviar">
+                Enviar enlace de recuperación
+            </button>
+
+            <div class="switch-link">
+                <a href="/login">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    Volver a inicio de sesión
+                </a>
+            </div>
+        </div>
+
+        <!-- Vista 2: Confirmación después de enviar -->
+        <div id="view-ok" style="display:none;">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </div>
+
+            <div class="form-heading">
+                <h2>Revisa tu correo</h2>
+            </div>
+
+            <div class="info-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <p>
+                    Si el correo existe en nuestro sistema, recibirás un enlace
+                    para restablecer tu contraseña.
+                </p>
+            </div>
+
+            <p class="close-hint">
+                Puedes cerrar esta ventana una vez que hayas revisado tu bandeja de entrada.
+            </p>
+
+            <div class="switch-link" style="margin-top: 24px;">
+                <a href="/login">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    Volver a inicio de sesión
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/auth/recuperar-contrasena/recuperar-contrasena.js"></script>
+</body>
+</html>

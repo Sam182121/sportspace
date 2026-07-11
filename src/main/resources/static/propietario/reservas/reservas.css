@@ -1,0 +1,55 @@
+.reserva-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; padding:14px 18px; margin-bottom:10px; transition:box-shadow .15s; }
+.reserva-card:hover { box-shadow:var(--shadow2); }
+.reserva-avatar { width:40px; height:40px; border-radius:50%; font-weight:700; font-size:13px; font-family:var(--font-head); display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--accent-light); color:var(--accent); }
+.reserva-card-left { display:flex; align-items:center; gap:12px; min-width:190px; flex-shrink:0; }
+.reserva-nombre { font-size:13.5px; font-weight:600; color:var(--text); }
+.reserva-num    { font-size:11px; color:var(--text3); font-weight:400; margin-left:4px; }
+.reserva-correo { font-size:11.5px; color:var(--text3); margin-top:2px; }
+.reserva-card-mid { flex:1; display:flex; flex-direction:column; gap:5px; }
+.reserva-det { display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text2); }
+.reserva-det svg { flex-shrink:0; color:var(--text3); }
+.reserva-card-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+.search-box { display:flex; align-items:center; gap:7px; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius2); padding:0 10px; height:36px; }
+.voucher-placeholder { background:var(--bg3); height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--text3); border-radius:var(--radius2); }
+.voucher-placeholder svg { width:32px; height:32px; opacity:.4; }
+@media(max-width:700px) { .reserva-card { flex-direction:column; align-items:flex-start; } .reserva-card-right { flex-direction:row; align-self:stretch; justify-content:flex-end; } }
+/* ── Barra de filtros ───────────────────────────────────────── */
+.filtros-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: var();
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+/* ── Cards de reserva ───────────────────────────────────────── */
+.reservas-list   { display: flex; flex-direction: column; gap: 10px; }
+.reserva-card    { display: flex; gap: 16px; align-items: flex-start; background: var(); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; transition: box-shadow .15s; }
+.reserva-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.rc-cancelada    { opacity: .72; border-left: 3px solid var(--danger); }
+
+.rc-left         { min-width: 160px; flex-shrink: 0; }
+.rc-center       { flex: 1; }
+.rc-right        { min-width: 160px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.rc-id           { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 3px; }
+.rc-nombre       { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.rc-email        { font-size: 11.5px; color: var(--text3); }
+.rc-cancha       { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.rc-fecha        { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.rc-monto        { font-size: 15px; font-weight: 700; color: var(--success); }
+.rc-monto-cancelada { color: var(--text3); text-decoration: line-through; }
+.rc-reembolso-label { font-size: 11.5px; color: var(--orange); margin-top: 4px; }
+.rc-actions      { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* ── Pagos table row cancelada ──────────────────────────────── */
+.tr-cancelada td { background: rgba(255,200,100,.06); }
+
+@media(max-width:700px) {
+    .reserva-card { flex-direction: column; }
+    .rc-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .filtros-bar { flex-direction: column; align-items: stretch; }
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Bloqueo de seguridad</title>
+    <link rel="stylesheet" href="/auth/reset-password/reset-password.css"/>
+    <style>
+        /* ── Icono circular ── */
+        .security-icon {
+            width: 68px; height: 68px;
+            border-radius: 50%;
+            background: #fef2f2;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .security-icon svg { width: 32px; height: 32px; color: #ef4444; }
+
+        /* ── Cuadro de aviso informativo ── */
+        .security-notice {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 16px 0 22px;
+            text-align: left;
+            font-size: 13.5px;
+            color: #4b5563;
+            line-height: 1.65;
+        }
+        .security-notice p { margin: 0 0 10px; }
+        .security-notice p:last-child { margin: 0; }
+        .security-notice a { color: #1a56db; }
+
+        /* ── Botón rojo principal ── */
+        .btn-danger {
+            display: block; width: 100%;
+            padding: 13px;
+            background: #ef4444;
+            color: #fff;
+            border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s;
+            text-align: center;
+        }
+        .btn-danger:hover:not(:disabled) { background: #dc2626; }
+        .btn-danger:disabled { opacity: .6; cursor: not-allowed; }
+
+        /* ── Botón secundario (cancelar) — se oculta tras bloquear ── */
+        .btn-secondary {
+            display: block; width: 100%;
+            padding: 11px;
+            background: transparent;
+            color: #6b7280;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px; font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover { background: #f3f4f6; }
+
+        /* ── Vista: cuenta ya bloqueada con éxito ── */
+        .blocked-view { display: none; text-align: center; }
+        .blocked-icon {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: #ecfdf5;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .blocked-icon svg { width: 32px; height: 32px; color: #10b981; }
+
+        /* ── Vista: enlace inválido / expirado ── */
+        .invalid-view { display: none; text-align: center; }
+        .invalid-icon {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: #fffbeb;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .invalid-icon svg { width: 32px; height: 32px; color: #f59e0b; }
+
+        /* ── Spinner ── */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+
+    <!-- Panel izquierdo -->
+    <div class="login-left">
+        <div class="left-content">
+            <div class="left-logo">
+                <div class="left-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="2" y="7" width="20" height="14" rx="2"/>
+                        <path d="M12 7v14M2 14h20"/>
+                    </svg>
+                </div>
+                <h1>SportSpace</h1>
+            </div>
+            <p class="left-tagline">
+                Tu seguridad es nuestra prioridad.<br>
+                Estamos aquí para proteger tu cuenta.
+            </p>
+        </div>
+        <div class="left-footer">SportSpace &copy; 2026</div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="login-right">
+
+        <!-- ═══════════════════════════════════════
+             VISTA 1 — Confirmar bloqueo
+             Visible al entrar con el enlace del correo
+        ════════════════════════════════════════ -->
+        <div id="view-bloqueo">
+
+            <div class="security-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+
+            <div class="form-heading">
+                <h2>Bloqueo de seguridad</h2>
+                <p id="bloqueo-nombre-msg">Si crees que otra persona accedió a tu cuenta, bloquéala ahora.</p>
+            </div>
+
+            <div class="security-notice">
+                <p>
+                    Si crees que otra persona ingresó a tu cuenta, te recomendamos bloquearla temporalmente.
+                </p>
+                <p>
+                    <strong>Nadie de SportSpace</strong> te pedirá los datos de tu cuenta ni tus claves personales por ningún medio.
+                </p>
+                <p>
+                    Una vez bloqueada tu cuenta, comunícate con nosotros para habilitarla nuevamente.<br>
+                    Escríbenos a: <a href="mailto:rondomnims9@gmail.com">rondomnims9@gmail.com</a>
+                </p>
+            </div>
+
+            <div id="bloqueo-alert"></div>
+
+            <button class="btn-danger" id="btn-bloquear-ahora" onclick="bloquearCuenta()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.5" style="vertical-align:middle;margin-right:6px;margin-top:-2px;">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Bloquear ahora
+            </button>
+
+            <!-- Este botón se oculta automáticamente después de bloquear -->
+            <a href="/login" class="btn-secondary" id="btn-cancelar">
+                Cancelar — Fui yo quien cambió la contraseña
+            </a>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             VISTA 2 — Cuenta bloqueada con éxito
+             Aparece tras confirmar el bloqueo.
+             El botón "Cancelar" desaparece aquí.
+        ════════════════════════════════════════ -->
+        <div id="view-bloqueado" class="blocked-view">
+
+            <div class="blocked-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+
+            <div class="form-heading">
+                <h2>Cuenta bloqueada</h2>
+                <p id="bloqueado-msg">
+                    Tu cuenta ha sido bloqueada temporalmente. Nadie podrá ingresar hasta que te comuniques con nosotros.
+                </p>
+            </div>
+
+            <div class="security-notice">
+                <p>
+                    Para reactivar tu cuenta escríbenos a:<br>
+                    <a href="mailto:rondomnims9@gmail.com">rondomnims9@gmail.com</a>
+                </p>
+                <p>Nuestro equipo te atenderá a la brevedad posible.</p>
+            </div>
+
+            <!-- Sin botón de cancelar ni ningún otro botón aquí -->
+
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             VISTA 3 — Enlace inválido / ya usado / expirado
+             Aparece cuando el token no sirve.
+        ════════════════════════════════════════ -->
+        <div id="view-invalido" class="invalid-view">
+
+            <div class="invalid-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+
+            <div class="form-heading">
+                <h2>Enlace no válido</h2>
+                <p id="invalido-msg">
+                    Este enlace ya fue utilizado o ha expirado.
+                </p>
+            </div>
+
+            <div class="security-notice">
+                <p>
+                    Si necesitas bloquear tu cuenta, escríbenos directamente:<br>
+                    <a href="mailto:rondomnims9@gmail.com">rondomnims9@gmail.com</a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="/auth/bloquear-cuenta/bloquear-cuenta.js"></script>
+</body>
+</html>

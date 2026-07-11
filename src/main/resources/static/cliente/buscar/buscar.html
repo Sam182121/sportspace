@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Buscar Canchas</title>
+    <link rel="stylesheet" href="/cliente/shared/cliente.css"/>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+<div id="navbar-container"></div>
+
+<!-- HERO con buscador -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:24px 24px 0">
+    <div style="max-width:1140px;margin:0 auto">
+
+        <div style="display:inline-flex;align-items:center;gap:6px;background:var(--accent-light);border:1px solid rgba(26,86,219,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px">
+            <svg viewBox="0 0 10 10" style="width:9px;height:9px;fill:var(--accent)"><circle cx="5" cy="5" r="5"/></svg>
+            Canchas disponibles ahora
+        </div>
+        <h1 style="font-family:var(--font-head);font-size:24px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.2;margin-bottom:4px">Encuentra tu cancha ideal</h1>
+        <p style="font-size:13.5px;color:var(--text3);margin-bottom:20px">Busca por nombre, filtra por zona y deporte, y reserva en minutos.</p>
+
+        <!-- Barra de búsqueda -->
+        <div style="display:flex;gap:8px;align-items:center;max-width:680px;margin-bottom:0">
+            <div class="search-bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="searchInput" placeholder="Buscar por nombre de cancha…" oninput="filtrar()"/>
+            </div>
+            <button class="btn btn-primary" onclick="filtrar()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Buscar
+            </button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-row" style="padding:12px 0 0;border-top:1px solid var(--border);margin-top:16px">
+            <span style="font-size:11.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Filtrar:</span>
+            <select class="filter-select" id="selDepartamento" onchange="onFiltroCascada('dep')">
+                <option value="">Departamento</option>
+            </select>
+            <select class="filter-select" id="selProvincia" onchange="onFiltroCascada('prov')">
+                <option value="">Provincia</option>
+            </select>
+            <select class="filter-select" id="selDistrito" onchange="filtrar()">
+                <option value="">Distrito</option>
+            </select>
+            <select class="filter-select" id="selDeporte" onchange="filtrar()">
+                <option value="">Deporte</option>
+                <option value="FUTBOL">Fútbol</option>
+                <option value="BASQUETBOL">Básquet</option>
+                <option value="VOLEIBOL">Vóley</option>
+                <option value="TENIS">Tenis</option>
+                <option value="PADEL">Pádel</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" onclick="resetFiltros()">Limpiar</button>
+        </div>
+
+        <!-- Chips rápidos -->
+        <div class="chips-bar">
+            <button class="chip active" onclick="quickFilter(this,'')">Todos</button>
+            <button class="chip" onclick="quickFilter(this,'FUTBOL')">⚽ Fútbol</button>
+            <button class="chip" onclick="quickFilter(this,'BASQUETBOL')">🏀 Básquet</button>
+            <button class="chip" onclick="quickFilter(this,'VOLEIBOL')">🏐 Vóley</button>
+            <button class="chip" onclick="quickFilter(this,'TENIS')">🎾 Tenis</button>
+            <button class="chip" onclick="quickFilter(this,'PADEL')">🏸 Pádel</button>
+        </div>
+    </div>
+</div>
+
+<div class="page-body">
+    <div class="section-header">
+        <h2>Canchas disponibles</h2>
+        <span class="count-badge" id="countLabel">cargando…</span>
+    </div>
+    <div class="canchas-grid" id="canchasGrid">
+        <div class="loading-state" style="grid-column:1/-1"><div class="spinner"></div> Cargando canchas…</div>
+    </div>
+    <div id="noResultados" class="empty-state" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h4>Sin resultados</h4>
+        <p>Intenta con otro nombre o ajusta los filtros.</p>
+    </div>
+</div>
+
+<!-- MODAL RESERVA -->
+<div id="modal-reserva-container"></div>
+
+<script src="/api.js"></script>
+<script src="/shared/cloudinary.js"></script>   <!-- ← nuevo, después de api.js -->
+<script src="/cliente/shared/cliente.js"></script>
+<script src="/cliente/buscar/buscar.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Mis Reservas</title>
+    <link rel="stylesheet" href="/cliente/shared/cliente.css"/>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+<div id="navbar-container"></div>
+
+<div class="page-body">
+    <div class="page-header-row" style="margin-top:6px">
+        <div>
+            <h1>Mis Reservas</h1>
+            <p style="font-size:13px;color:var(--text3);margin-top:2px">Gestiona y consulta el estado de todas tus reservas</p>
+        </div>
+        <a href="/cliente/buscar" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Nueva reserva
+        </a>
+    </div>
+
+    <!-- Stats rápidas -->
+    <div class="stats-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-bottom:22px" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-label">Pendientes</div>
+            <div class="stat-val" id="stPendientes" style="font-size:20px">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Confirmadas</div>
+            <div class="stat-val" id="stConfirmadas" style="font-size:20px;color:var(--success)">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Completadas</div>
+            <div class="stat-val" id="stCompletadas" style="font-size:20px;color:var(--text3)">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total gastado</div>
+            <div class="stat-val" id="stGasto" style="font-size:16px;color:var(--success)">—</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-list" style="max-width:400px">
+        <button class="tab-btn active" id="tabActivas"   onclick="switchTab('activas')">Activas</button>
+        <button class="tab-btn"        id="tabHistorial" onclick="switchTab('historial')">Historial</button>
+    </div>
+
+    <!-- Lista activas -->
+    <div id="listaActivas">
+        <div class="loading-state"><div class="spinner"></div> Cargando reservas…</div>
+    </div>
+
+    <!-- Buscador y filtros de Historial -->
+    <div id="filtrosHistorial" style="display:none;margin-bottom:14px">
+        <input type="text" id="inputBuscarHistorial" placeholder="Buscar por cancha, deporte, código o fecha..."
+               oninput="buscarEnHistorial(this.value)"
+               style="width:100%;max-width:360px;padding:9px 12px;border:1px solid var(--border);
+                      border-radius:8px;font-size:13px;margin-bottom:10px;background:var(--bg2,#fff)"/>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="filtro-chip active" onclick="setFiltroHistorial('todas',this)"
+                    style="padding:6px 14px;border:none;border-radius:20px;font-size:12.5px;font-weight:600;
+                           cursor:pointer;background:var(--primary,#2563eb);color:#fff">Todas</button>
+            <button class="filtro-chip" onclick="setFiltroHistorial('confirmada',this)"
+                    style="padding:6px 14px;border:none;border-radius:20px;font-size:12.5px;font-weight:600;
+                           cursor:pointer;background:var(--bg3,#f1f5f9);color:var(--text2,#334155)">Confirmadas</button>
+            <button class="filtro-chip" onclick="setFiltroHistorial('completada',this)"
+                    style="padding:6px 14px;border:none;border-radius:20px;font-size:12.5px;font-weight:600;
+                           cursor:pointer;background:var(--bg3,#f1f5f9);color:var(--text2,#334155)">Completadas</button>
+            <button class="filtro-chip" onclick="setFiltroHistorial('cancelada',this)"
+                    style="padding:6px 14px;border:none;border-radius:20px;font-size:12.5px;font-weight:600;
+                           cursor:pointer;background:var(--bg3,#f1f5f9);color:var(--text2,#334155)">Canceladas</button>
+            <button class="filtro-chip" onclick="setFiltroHistorial('reembolsada',this)"
+                    style="padding:6px 14px;border:none;border-radius:20px;font-size:12.5px;font-weight:600;
+                           cursor:pointer;background:var(--bg3,#f1f5f9);color:var(--text2,#334155)">Canceladas / Reembolsadas</button>
+        </div>
+    </div>
+
+    <!-- Lista historial (oculta por defecto) -->
+    <div id="listaHistorial" style="display:none">
+        <div class="loading-state"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<!-- Modal cancelar -->
+<div class="modal-overlay" id="modalCancelar" onclick="cerrarModalCancelar(event)">
+    <div class="modal" style="max-width:420px">
+        <div class="modal-header">
+            <h3>Cancelar reserva</h3>
+            <button class="modal-close" onclick="cerrarModalCancelar()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:14px">
+                ¿Seguro que quieres cancelar esta reserva? Si ya estaba pagada, el propietario procesará tu reembolso.
+            </p>
+            <div id="detalleCancelar" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px 14px;font-size:13px;color:var(--text2);margin-bottom:16px">—</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarModalCancelar()">No, mantener</button>
+            <button class="btn btn-danger"    id="btnConfirmarCancelar" onclick="ejecutarCancelar()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Sí, cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal detalles de reserva -->
+<div class="modal-overlay" id="modalDetalle" onclick="cerrarModalDetalle(event)">
+    <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+            <h3>Detalle de la reserva</h3>
+            <button class="modal-close" onclick="cerrarModalDetalle()">✕</button>
+        </div>
+        <div class="modal-body" id="detalleBody">
+            <div class="loading-state"><div class="spinner"></div> Cargando…</div>
+        </div>
+    </div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/cliente/shared/cliente.js"></script>
+<script src="/cliente/reservas/reservas.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+/* ── Horario principal ─────────────────────────────────────── */
+.horario-card { margin-bottom: 0; }
+
+.dias-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dia-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--bg3, #f8fafc);
+    border: 1.5px solid var(--border, #e5e7eb);
+    border-radius: 10px;
+    transition: border-color .15s, background .15s;
+    flex-wrap: wrap;
+}
+
+.dia-row.dia-activo {
+    background: var(#fff);
+    border-color: var(--accent, #3b82f6);
+}
+
+/* Toggle switch */
+.dia-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #d1d5db;
+    border-radius: 22px;
+    transition: .2s;
+}
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: .2s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--accent, #3b82f6); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+.dia-nombre {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text, #1a1a2e);
+}
+.dia-corto { display: none; }
+
+/* Horas */
+.dia-horas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.dia-horas-disabled { opacity: .4; pointer-events: none; }
+
+.hora-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.hora-grupo label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3, #6b7280);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.hora-sel {
+    height: 34px;
+    min-width: 90px;
+    font-size: 13px;
+    padding: 0 8px;
+}
+
+.hora-separador {
+    font-size: 16px;
+    color: var(--text3, #9ca3af);
+    padding-top: 18px;
+}
+
+.dia-resumen {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 8px;
+}
+.resumen-horas {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent, #3b82f6);
+}
+.resumen-cant {
+    font-size: 11px;
+    color: var(--text3, #6b7280);
+}
+
+.dia-cerrado-label {
+    font-size: 12px;
+    color: var(--text3, #9ca3af);
+    font-style: italic;
+    margin-left: auto;
+}
+
+.horario-tip {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text3, #6b7280);
+    background: var(--bg3, #f8fafc);
+    border-radius: 8px;
+    padding: 10px 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+    .dia-nombre { display: none; }
+    .dia-corto  { display: inline; font-weight: 600; font-size: 13px; }
+    .dia-toggle-wrap { min-width: 100px; }
+    .hora-sel { min-width: 75px; }
+}

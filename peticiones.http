@@ -1,0 +1,233 @@
+### Registro de nuevo usuario
+POST http://localhost:8080/api/auth/registro
+Content-Type: application/json
+
+{
+  "nombres": "Maria",
+  "apellidos": "Garcia ",
+  "email": "maria@gmail.com",
+  "password": "127899",
+  "dni": "12354477",
+  "telefono": "948484112",
+  "rol": "CLIENTE"
+}
+
+### Prueba de Login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email":"repavab545@fanchatu.com",
+  "password": "Carlos321@"
+}
+### DESPUES VEO ESTO
+GET http://localhost:8080/api/admin/usuarios
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqdWFuQGdtYWlsLmNvbSIsInJvbCI6IkNMSUVOVEUiLCJpYXQiOjE3NzcxNTQ5MTEsImV4cCI6MTc3NzI0MTMxMX0.iapbyEKtbKzddxVrBoRIJK1m94AODE6rIAEBMJYGRoRB8Y_RkMAM9w0rbVwAA7cT}
+
+### Registro de Propietario
+POST http://localhost:8080/api/auth/registro
+Content-Type: application/json
+
+{
+  "nombres": "Carlos",
+  "apellidos": "Gomes",
+  "email": "carlos@gmail.com",
+  "password": "1234568",
+  "dni": "88844410",
+  "telefono": "999777215",
+  "rol": "PROPIETARIO"
+}
+
+### Login de Carlos (Propietario)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "carlos@sport.com",
+  "password": "123456"
+}
+
+### Registro de Cancha (Usar Token de Carlos)
+POST http://localhost:8080/api/canchas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+{
+  "nombre": "Cancha Voley",
+  "descripcion": "Cancha de piso para vole",
+  "deporte": "Vooley",
+  "precioHora": 50.00,
+  "direccion": "Lima 133",
+  "distrito": "Chosica",
+  "capacidad": 14
+}
+
+### Ver lista pública de canchas
+GET http://localhost:8080/api/canchas/publico
+
+### Ver mis propias canchas (Solo Propietario)
+GET http://localhost:8080/api/canchas/mis-canchas
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+### Actualizar datos de una cancha (ID 1)
+PUT http://localhost:8080/api/canchas/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+{
+  "nombre": "Cancha Fútbol Norte - Premium",
+  "descripcion": "Renovada con vestuarios",
+  "deporte": "Fútbol",
+  "precioHora": 90.00,
+  "direccion": "Av. Los Olivos 123",
+  "distrito": "Los Olivos",
+  "capacidad": 14
+}
+
+### Desactivar cancha (Mantenimiento)
+PATCH http://localhost:8080/api/canchas/1/estado?activa=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+### Buscar canchas por distrito y deporte
+GET http://localhost:8080/api/canchas/publico/buscar?distrito=Los Olivos&deporte=Fútbol
+
+### Consultar disponibilidad de una cancha (ID 1)
+GET http://localhost:8080/api/reservas/disponibilidad/1?fecha=2026-05-10
+
+### Crear una Reserva (Usar Token de luz)
+POST http://localhost:8080/api/reservas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb25kb21uaW1zOUBnbWFpbC5jb20iLCJyb2wiOiJDTElFTlRFIiwiaWF0IjoxNzgwOTUyMDQ1LCJleHAiOjE3ODEwMzg0NDV9.K-uCMI7ZUmamzt8zpYPyXX-pzNf91lTcmeLfE_pqNGeMvDygvFIwNzN8qfQu251j
+
+{
+  "canchaId": 3,
+  "fecha": "2026-06-08",
+  "horaInicio": "16:00",
+  "horaFin": "17:00"
+}
+
+### Activar cancha de nuevo
+PATCH http://localhost:8080/api/canchas/1/estado?activa=true
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+### Ver mis reservas (Juan)
+GET http://localhost:8080/api/reservas/mis-reservas
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqdWFuQGdtYWlsLmNvbSIsInJvbCI6IkNMSUVOVEUiLCJpYXQiOjE3NzcxNjYwNDgsImV4cCI6MTc3NzI1MjQ0OH0.50ZL-7SZQ0iWqJU3mofuK1jjNSy_0aGT4Abjq56pusXTnRhHyQF3hVk1PlK5G-dZ
+
+### Confirmar Reserva (Solo Propietario)
+PATCH http://localhost:8080/api/reservas/2/estado
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+{
+  "estado": "CONFIRMADA",
+  "motivo": "Pago recibido"
+
+}
+
+### Cancelar mi propia reserva (Juan)
+PATCH http://localhost:8080/api/reservas/1/cancelar
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqdWFuQGdtYWlsLmNvbSIsInJvbCI6IkNMSUVOVEUiLCJpYXQiOjE3NzcxNjYwNDgsImV4cCI6MTc3NzI1MjQ0OH0.50ZL-7SZQ0iWqJU3mofuK1jjNSy_0aGT4Abjq56pusXTnRhHyQF3hVk1PlK5G-dZ
+
+### Ver mis ingresos totales (Carlos)
+GET http://localhost:8080/api/reservas/mis-ingresos
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+### Consultar DNI en RENIEC SI FUNCIONA SIUU
+GET http://localhost:8080/api/reniec/80979710
+
+### Registro con validación automática de RENIEC
+POST http://localhost:8080/api/auth/registro
+Content-Type: application/json
+
+{
+  "nombres": "ESTO NO IMPORTA",
+  "apellidos": "SERA REEMPLAZADO",
+  "email": "prueba2@gmail.com",
+  "password": "123456",
+  "dni": "80979710",
+  "telefono": "987654321",
+  "rol": "CLIENTE"
+}
+
+### 1. Login para obtener el Token
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@sportspace.com",
+  "password": "password123"
+}
+
+### Probar el cifrado de contraseñas
+GET http://localhost:8080/api/auth/test-hash?password=123456
+
+### Ver Dashboard de Administrador
+GET http://localhost:8080/api/dashboard/admin
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbkBzcG9ydHNwYWNlLmNvbSIsInJvbCI6IkFETUlOIiwiaWF0IjoxNzc3MTc0MTY1LCJleHAiOjE3NzcyNjA1NjV9.OQxQXz4JzhzRj7cl7W5k7p1JM6AIN6CyikH4uWYg_kXrlxzC_KaYzVyjNfSiMjbO
+
+### ver dashboard de propietario
+GET http://localhost:8080/api/dashboard/propietario
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjYXJsb3NAc3BvcnQuY29tIiwicm9sIjoiUFJPUElFVEFSSU8iLCJpYXQiOjE3NzcxNjM2MDEsImV4cCI6MTc3NzI1MDAwMX0.w2xU3nR18bR_VXrkoyo_H374nkD8XfCcN410b12vQ2GZZOJGOh7tK2QqAmyEKEHo
+
+### ver dashboard de cliente
+GET http://localhost:8080/api/dashboard/cliente
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqdWFuQGdtYWlsLmNvbSIsInJvbCI6IkNMSUVOVEUiLCJpYXQiOjE3NzcxNzQ2MTQsImV4cCI6MTc3NzI2MTAxNH0.WTIgwc63oaO_Uf0IPbQOAyAqDkw61JTGrrd5-bbWl4YFC8YXa6I0t-XATV6ifNRN
+
+### probando existencia de dni
+GET http://localhost:8080/api/usuarios/publico/existe-dni/80979710
+
+### probando nuevo registro
+POST http://localhost:8080/api/auth/registro
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nombres": "Juan Carlos",
+  "apellidos": "Perez Garcia",
+  "email": "juan2@test.com",
+  "password": "123456",
+  "dni": "12345679",
+  "telefono": "987654321",
+  "rol": "CLIENTE",
+  "fechaNacimiento": "2005-03-31",
+  "departamento": "LIMA",
+  "provincia": "LIMA",
+  "distrito": "SAN ISIDRO",
+  "direccion": "AV. PRINCIPAL 123",
+  "ubigeo": "150101"
+}
+
+### prueba dni fake
+GET http://localhost:8080/api/reniec/12345678
+
+
+###
+POST http://localhost:8080/api/pagos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb25kb21uaW1zOUBnbWFpbC5jb20iLCJyb2wiOiJDTElFTlRFIiwiaWF0IjoxNzgwOTUyMDQ1LCJleHAiOjE3ODEwMzg0NDV9.K-uCMI7ZUmamzt8zpYPyXX-pzNf91lTcmeLfE_pqNGeMvDygvFIwNzN8qfQu251j
+
+{
+  "reservaId": 4,
+  "metodo": "EFECTIVO"
+}
+
+###
+POST http://localhost:8080/api/pagos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb25kb21uaW1zOUBnbWFpbC5jb20iLCJyb2wiOiJDTElFTlRFIiwiaWF0IjoxNzgwOTUwMjIxLCJleHAiOjE3ODEwMzY2MjF9.zj5jPmfAXHpxh1O-f9TbRCrEiOvs6b-y0X-Ez-IRZsEv2vgC6AoqehkVYv-yHHgS
+
+
+{
+  "reservaId": 3,
+  "metodo": "TRANSFERENCIA"
+}
+###
+PATCH http://localhost:8080/api/pagos/2/confirmar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyZXBhdmFiNTQ1QGZhbmNoYXR1LmNvbSIsInJvbCI6IlBST1BJRVRBUklPIiwiaWF0IjoxNzgwOTUyMzY2LCJleHAiOjE3ODEwMzg3NjZ9.o6yIFVCwbr09z1XXqR4XufA2xaEL5Xb-HqhZlbPre5EIjfXtZJQDxQRWgeshHUME
+
+{
+"notas": "Transferencia verificada"
+}
+

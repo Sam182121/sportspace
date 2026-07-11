@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Mis Canchas</title>
+    <link rel="stylesheet" href="/propietario/shared/propietario.css"/>
+    <link rel="stylesheet" href="/propietario/canchas/canchas.css"/>
+</head>
+<body>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Modal Agregar / Editar cancha -->
+<div class="modal-overlay" id="modalCancha">
+    <div class="modal" style="max-width:620px">
+        <div class="modal-header">
+            <h3 id="modalCanchaTitle">Agregar Cancha</h3>
+            <button class="modal-close" onclick="closeModal('modalCancha')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="canchaId"/>
+            <div id="avisoEdicionModal" style="display:none;background:#fff8e1;border:1px solid #fde047;
+                 border-radius:8px;padding:9px 12px;font-size:12px;color:#713f12;margin-bottom:14px">
+                ℹ️ Solo tienes <strong>1 edición por mes</strong> para esta cancha. Revisa bien los datos antes de guardar.
+            </div>
+            <div class="form-grid">
+                <div class="form-section-title">Información básica</div>
+                <div class="form-group full">
+                    <label>Nombre *</label>
+                    <input class="form-input" id="cNombre" placeholder="Ej: Cancha Fútbol Premium A"/>
+                </div>
+                <div class="form-group">
+                    <label>Deporte *</label>
+                    <select class="form-select" id="cDeporte">
+                        <option value="">Seleccionar...</option>
+                        <option>FUTBOL</option><option>BASQUETBOL</option>
+                        <option>VOLEIBOL</option><option>TENIS</option><option>PADEL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Superficie</label>
+                    <select class="form-select" id="cSuperficie">
+                        <option>GRASS_SINTETICO</option><option>LOSA</option>
+                        <option>PARQUET</option><option>ARENA</option><option>CEMENTO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Precio/hora (S/.) *</label>
+                    <input class="form-input" id="cPrecio" type="number" min="0" step="0.50" placeholder="0.00"/>
+                </div>
+                <div class="form-group">
+                    <label>Capacidad (jugadores)</label>
+                    <input class="form-input" id="cCapacidad" type="number" min="1" placeholder="Ej: 14"/>
+                </div>
+                <div class="form-group full">
+                    <label>Descripción</label>
+                    <textarea class="form-textarea" id="cDescripcion" placeholder="Iluminación, vestuarios, estacionamiento..."></textarea>
+                </div>
+                <div class="form-section-title">Ubicación</div>
+                <div class="form-group">
+                    <label>Departamento *</label>
+                    <select class="form-select" id="cDepartamento" onchange="cargarProvincias(this.value)">
+                        <option value="">Seleccionar...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Provincia *</label>
+                    <select class="form-select" id="cProvincia" onchange="cargarDistritos(this.value)" disabled>
+                        <option value="">Primero selecciona departamento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Distrito *</label>
+                    <select class="form-select" id="cDistrito" disabled>
+                        <option value="">Primero selecciona provincia</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Dirección *</label>
+                    <input class="form-input" id="cDireccion" placeholder="Av. Los Deportes 234"/>
+                </div>
+                <div class="form-section-title">Fotos <span style="font-weight:400;color:var(--text3)">(máx. 3)</span></div>
+                <div class="form-group full">
+                    <div id="fotosActualesWrap" style="display:none;margin-bottom:10px"></div>
+                    <div class="upload-area" onclick="document.getElementById('fileFotos').click()">
+                        <input type="file" id="fileFotos" accept="image/*" multiple style="display:none" onchange="handleFotosCancha(event)"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <p>Arrastra fotos o <span>selecciona archivos</span></p>
+                        <p style="font-size:11px;margin-top:4px">JPG, PNG · máx. 5MB</p>
+                    </div>
+                    <div class="upload-previews" id="previewsNuevos"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modalCancha')">Cancelar</button>
+            <button class="btn btn-primary" id="btnGuardarCancha" onclick="guardarCancha()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Guardar cancha
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirmar eliminar -->
+<div class="modal-overlay" id="modalConfirm">
+    <div class="modal" style="max-width:380px">
+        <div class="modal-header">
+            <h3>¿Eliminar cancha?</h3>
+            <button class="modal-close" onclick="closeModal('modalConfirm')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:13.5px;color:var(--text2);line-height:1.6">
+                Esta acción eliminará permanentemente <strong id="confirmNombreCancha"></strong> y todos sus horarios configurados. No se puede deshacer.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modalConfirm')">Cancelar</button>
+            <button class="btn btn-danger" id="btnConfirmEliminar">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+    <div id="sidebar-container"></div>
+    <div class="main">
+        <header class="header">
+            <div class="header-left">
+                <button class="hamburger" id="hamburger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+                <div class="breadcrumb"><span>Propietario</span><span class="bc-sep">›</span><span class="bc-page" id="bcPage">Mis Canchas</span></div>
+            </div>
+            <div class="header-right">
+                <button class="notif-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+                <div class="user-dropdown-wrap" id="userDropdownWrap">
+                    <button class="header-user" id="headerUser">
+                        <div class="header-avatar" id="headerAvatar">P</div>
+                        <div class="header-user-info"><div class="header-user-name" id="headerName">—</div><div class="header-user-role" id="headerRole">Propietario</div></div>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-info"><div class="dropdown-info-name" id="dropdownName">—</div><div class="dropdown-info-role" id="dropdownRole">—</div><div class="dropdown-info-email" id="dropdownEmail">—</div></div>
+                        <button class="dropdown-item danger" onclick="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="page-header-row">
+                <div><h1>Mis Canchas</h1><p>Administra tus espacios deportivos</p></div>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--text3)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="buscarCancha" placeholder="Buscar cancha..." oninput="filtrarCanchas(this.value)" style="border:none;outline:none;background:transparent;font-size:13px;font-family:var(--font);width:160px"/>
+                    </div>
+                    <button class="btn btn-primary" onclick="abrirModalAgregar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Agregar Cancha
+                    </button>
+                </div>
+            </div>
+
+            <div id="canchasGrid" class="canchas-grid">
+                <div style="grid-column:1/-1"><div class="loading-state"><div class="spinner"></div> Cargando canchas...</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/shared/cloudinary.js"></script>   <!-- ← nuevo, después de api.js -->
+<script src="/propietario/shared/propietario.js"></script>
+<script src="/propietario/canchas/canchas.js"></script>
+</body>
+</html>

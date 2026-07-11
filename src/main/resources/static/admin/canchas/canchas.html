@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SportSpace — Canchas</title>
+    <link rel="stylesheet" href="/admin/shared/admin.css"/>
+    <link rel="stylesheet" href="/admin/canchas/canchas.css"/>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- CONFIRMACION -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal" style="max-width:380px">
+        <div class="modal-header">
+            <h3>Confirmar accion</h3>
+            <button class="modal-close" onclick="closeModal('confirmModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="confirmMsg" style="font-size:13.5px;color:var(--text2);line-height:1.6"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('confirmModal')">Cancelar</button>
+            <button class="btn btn-danger" id="confirmOk">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<!-- DETALLE CANCHA -->
+<div class="modal-overlay" id="modalDetalle">
+    <div class="modal" style="max-width:600px">
+        <div class="modal-header">
+            <h3>Detalle de la Cancha</h3>
+            <button class="modal-close" onclick="closeModal('modalDetalle')">&times;</button>
+        </div>
+        <div class="modal-body" id="detalleBody">
+            <div class="loading-center"><div class="spinner"></div></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modalDetalle')">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- LIGHTBOX DE FOTOS -->
+<div id="lightbox" onclick="cerrarLightbox()" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,0.88); align-items:center; justify-content:center;">
+
+    <!-- Contenedor interior: clic aquí NO cierra el lightbox -->
+    <div onclick="event.stopPropagation()" style="
+        position:relative; max-width:90vw; max-height:90vh;
+        display:flex; align-items:center; justify-content:center;">
+
+        <!-- Imagen -->
+        <img id="lbImg" src="" alt="Foto cancha" style="
+            max-width:100%; max-height:85vh;
+            border-radius:10px; object-fit:contain;
+            box-shadow:0 8px 40px rgba(0,0,0,0.6);"/>
+
+        <!-- Contador -->
+        <div id="lbCounter" style="
+            position:absolute; bottom:-28px; left:50%; transform:translateX(-50%);
+            font-size:13px; color:rgba(255,255,255,0.7); white-space:nowrap;"></div>
+
+        <!-- Anterior -->
+        <button id="lbPrev" onclick="lbAnterior()" style="
+            position:absolute; left:-52px; top:50%; transform:translateY(-50%);
+            width:40px; height:40px; border-radius:50%;
+            background:rgba(255,255,255,0.15); border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:#fff;
+            transition:background .15s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+        </button>
+
+        <!-- Siguiente -->
+        <button id="lbNext" onclick="lbSiguiente()" style="
+            position:absolute; right:-52px; top:50%; transform:translateY(-50%);
+            width:40px; height:40px; border-radius:50%;
+            background:rgba(255,255,255,0.15); border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:#fff;
+            transition:background .15s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+            </svg>
+        </button>
+
+        <!-- Cerrar -->
+        <button onclick="cerrarLightbox()" style="
+            position:absolute; top:-44px; right:0;
+            width:36px; height:36px; border-radius:50%;
+            background:rgba(255,255,255,0.15); border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; color:#fff;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<div class="layout">
+    <div id="sidebar-container"></div>
+    <div class="main">
+        <header class="header">
+            <div class="header-left">
+                <button class="hamburger" id="hamburger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6"  x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span class="bc-root">Admin</span>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-page" id="bcPage">Canchas</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="np-wrap">
+                    <button class="notif-btn" id="notifBtn" title="Notificaciones">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notif-dot" id="notifDot" style="display:none"></span>
+                        <span class="np-badge" id="notifBadge" style="display:none">!</span>
+                    </button>
+                    <div class="np-panel" id="notifPanel">
+                        <div class="np-header">
+                            <span class="np-title">Notificaciones</span>
+                        </div>
+                        <div class="np-list" id="notifPanelList">
+                            <div class="np-empty">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                                <span>Cargando...</span>
+                            </div>
+                        </div>
+                        <div class="np-footer">
+                            <a href="/admin/configuracion" class="np-cfg">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                                Configurar notificaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-dropdown-wrap" id="userDropdownWrap">
+                    <button class="header-user" id="headerUser">
+                        <div class="header-avatar" id="headerAvatar">A</div>
+                        <div class="header-user-info">
+                            <div class="header-user-name" id="headerName">Cargando...</div>
+                            <div class="header-user-role" id="headerRole">ADMIN</div>
+                        </div>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-info">
+                            <div class="dropdown-info-name"  id="dropName">—</div>
+                            <div class="dropdown-info-role"  id="dropRole">—</div>
+                            <div class="dropdown-info-email" id="dropEmail">—</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" onclick="window.location.href='/admin/configuracion'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06
+                                         a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                                         A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83
+                                         l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09
+                                         A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83
+                                         l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09
+                                         a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83
+                                         l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09
+                                         a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                            Configuracion
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item danger" onclick="logout()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Cerrar sesion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="page-header-row">
+                <div>
+                    <h1>Gestion de Canchas</h1>
+                    <p>Administra todas las canchas publicadas en la plataforma</p>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="stat-card blue">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M12 7v14M2 14h20"/>
+                        </svg>
+                    </div>
+                    <div class="stat-label">Total Canchas</div>
+                    <div class="stat-value-row"><div class="stat-value" id="statTotal">—</div></div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="stat-label">Activas</div>
+                    <div class="stat-value-row"><div class="stat-value" id="statActivas">—</div></div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div class="stat-label">Pendientes</div>
+                    <div class="stat-value-row"><div class="stat-value" id="statPendientes">—</div></div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                        </svg>
+                    </div>
+                    <div class="stat-label">Inactivas</div>
+                    <div class="stat-value-row"><div class="stat-value" id="statInactivas">—</div></div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" class="filter-input wide" id="filtroBuscar"
+                       placeholder="Buscar por nombre o propietario..."
+                       oninput="filtrarCanchas()"/>
+                <select class="filter-select" id="filtroDeporte" onchange="filtrarCanchas()">
+                    <option value="">Todos los deportes</option>
+                    <option value="FUTBOL">Futbol</option>
+                    <option value="BASQUETBOL">Basquetbol</option>
+                    <option value="VOLEY">Voley</option>
+                    <option value="TENIS">Tenis</option>
+                    <option value="PADEL">Padel</option>
+                    <option value="OTRO">Otro</option>
+                </select>
+                <select class="filter-select" id="filtroEstado" onchange="filtrarCanchas()">
+                    <option value="">Todos los estados</option>
+                    <option value="ACTIVA">Activa</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="INACTIVA">Inactiva</option>
+                </select>
+                <button class="btn btn-secondary" onclick="limpiarFiltros()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Limpiar
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 id="tablaTitle">Canchas</h3>
+                    <span class="card-header-sub" id="tablaInfo"></span>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Cancha</th>
+                            <th>Propietario</th>
+                            <th>Deporte</th>
+                            <th>Ubicacion</th>
+                            <th>Precio/h</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaCanchas">
+                        <tr><td colspan="7" class="td-loading">
+                            <div class="loading-center"><div class="spinner"></div></div>
+                        </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="paginacionContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/admin/shared/admin.js"></script>
+<script src="/admin/canchas/canchas.js"></script>
+</body>
+</html>

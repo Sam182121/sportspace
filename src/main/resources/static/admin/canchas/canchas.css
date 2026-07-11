@@ -1,0 +1,231 @@
+/* ── celda cancha (sin ícono) ───────────────────────────────────────────── */
+.cancha-cell { display: flex; align-items: center; gap: 10px; }
+.cancha-cell-info .td-main { line-height: 1.3; }
+.cancha-cell-info .td-sub  { margin-top: 1px; }
+
+/* Badge DESTACADA inline en el nombre */
+.badge-destacada {
+    display: inline-block;
+    background: var(--purple-bg, #f5f3ff);
+    color: var(--purple, #7c3aed);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 5px;
+    text-transform: uppercase;
+}
+
+/* ── deporte badge ───────────────────────────────────────────────────────── */
+.deporte-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+.dep-futbol     { background: #ecfdf5; color: #065f46; }
+.dep-basquetbol { background: #fff7ed; color: #92400e; }
+.dep-voley      { background: #eff6ff; color: #1e40af; }
+.dep-tenis      { background: #fdf4ff; color: #6b21a8; }
+.dep-padel      { background: #fff1f2; color: #9f1239; }
+.dep-otro       { background: var(--bg3); color: var(--text3); }
+
+/* ── precio ─────────────────────────────────────────────────────────────── */
+.precio-cell {
+    font-family: var(--font-head);
+    font-weight: 700; font-size: 14px;
+    color: var(--success);
+}
+
+/* ── estado ─────────────────────────────────────────────────────────────── */
+.estado-cancha {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500;
+}
+.estado-cancha::before {
+    content: ''; width: 7px; height: 7px;
+    border-radius: 50%; flex-shrink: 0;
+}
+.estado-cancha.activa     { color: var(--success); }
+.estado-cancha.activa::before     { background: var(--success); }
+.estado-cancha.pendiente  { color: var(--warning); }
+.estado-cancha.pendiente::before  { background: var(--warning); }
+.estado-cancha.inactiva   { color: var(--danger); }
+.estado-cancha.inactiva::before   { background: var(--danger); }
+.estado-cancha.destacada  { color: var(--purple, #7c3aed); }
+.estado-cancha.destacada::before  { background: var(--purple, #7c3aed); }
+
+/* ── acciones ────────────────────────────────────────────────────────────── */
+.action-group { display: flex; gap: 4px; align-items: center; }
+.btn-icon.btn-view:hover    { color: var(--accent);  border-color: var(--accent);  background: var(--accent-light); }
+.btn-icon.btn-approve:hover { color: var(--success); border-color: var(--success); background: var(--success-bg); }
+.btn-icon.btn-hide:hover    { color: var(--warning); border-color: var(--warning); background: var(--warning-bg); }
+.btn-icon.btn-delete:hover  { color: var(--danger);  border-color: var(--danger);  background: var(--danger-bg); }
+
+/* ── fotos en el modal de detalle ───────────────────────────────────────── */
+.fotos-section {
+    margin-bottom: 16px;
+}
+.fotos-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text3);
+    margin-bottom: 8px;
+}
+.fotos-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Miniatura de foto con lupa al hover */
+.foto-thumb {
+    position: relative;
+    width: 110px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg3);
+}
+.foto-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .2s;
+}
+.foto-thumb:hover img {
+    transform: scale(1.05);
+}
+
+/* Overlay con ícono de lupa */
+.foto-lupa {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+.foto-lupa svg {
+    width: 22px; height: 22px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity .2s;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+}
+.foto-thumb:hover .foto-lupa {
+    background: rgba(0,0,0,0.32);
+}
+.foto-thumb:hover .foto-lupa svg {
+    opacity: 1;
+}
+
+/* Placeholder sin fotos */
+.fotos-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    color: var(--text3);
+    font-size: 12.5px;
+}
+.fotos-placeholder svg {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+}
+
+/* ── detalle modal ───────────────────────────────────────────────────────── */
+.detalle-cancha-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px;
+    background: var(--bg3);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+}
+.detalle-cancha-icon {
+    width: 52px; height: 52px;
+    border-radius: var(--radius2);
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.detalle-cancha-icon svg { width: 26px; height: 26px; color: var(--accent); }
+.detalle-cancha-nombre {
+    font-family: var(--font-head);
+    font-size: 15px; font-weight: 700; color: var(--text);
+}
+.detalle-cancha-sub { font-size: 12.5px; color: var(--text3); margin-top: 3px; }
+
+.detalle-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 14px;
+}
+.detalle-field { background: var(--bg3); border-radius: var(--radius2); padding: 10px 12px; }
+.detalle-field-label {
+    font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text3); margin-bottom: 3px;
+}
+.detalle-field-value { font-size: 13px; color: var(--text); font-weight: 500; }
+.detalle-field-value.money {
+    color: var(--success); font-family: var(--font-head);
+    font-weight: 700; font-size: 15px;
+}
+
+/* ── responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+}
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table thead tr th:nth-child(4),
+    table tbody tr td:nth-child(4) { display: none; }
+    .filter-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+    .filter-input, .filter-select, .filter-bar .btn { width: 100%; }
+    .page-header-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .detalle-grid { grid-template-columns: 1fr; }
+    .modal-body   { padding: 16px; }
+    .modal-footer { padding: 12px 16px; }
+    .foto-thumb   { width: 90px; height: 66px; }
+}
+@media (max-width: 600px) {
+    .stats-grid { grid-template-columns: 1fr 1fr !important; }
+    table thead tr th:nth-child(2),
+    table tbody tr td:nth-child(2) { display: none; }
+    tbody td, thead th { padding: 10px; font-size: 12px; }
+    .cancha-cell { gap: 7px; }
+    .btn-icon     { width: 26px; height: 26px; }
+    .btn-icon svg { width: 12px; height: 12px; }
+    .detalle-cancha-header { flex-direction: column; text-align: center; align-items: center; }
+    .pagination { justify-content: center; padding: 10px; gap: 4px; }
+    .page-info  { display: none; }
+    .page-btn   { width: 28px; height: 28px; font-size: 12px; }
+    .foto-thumb { width: 80px; height: 58px; }
+}
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr 1fr !important; }
+    .stat-card  { padding: 14px 12px; }
+    .page-body  { padding: 12px; }
+}
+@media (hover: none) and (pointer: coarse) {
+    .btn-icon { width: 34px; height: 34px; }
+    .filter-input, .filter-select { padding: 10px 12px; font-size: 15px; }
+    /* En táctil la lupa siempre visible */
+    .foto-lupa { background: rgba(0,0,0,0.2); }
+    .foto-lupa svg { opacity: 0.8; }
+}
