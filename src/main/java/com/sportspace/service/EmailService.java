@@ -20,11 +20,11 @@ public class EmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${spring.mail.username}")
+    @Value("${mailersend.from.email}")
     private String remitente;
 
-    @Value("${brevo.api.key}")
-    private String brevoApiKey;
+    @Value("${mailersend.api.token}")
+    private String mailerSendToken;
 
     //  CORREO DE VERIFICACIÓN
 
@@ -521,22 +521,22 @@ public class EmailService {
 
     private void enviarHtml(String destinatario, String asunto, String cuerpoHtml) {
         try {
-            Map<String, Object> sender = new HashMap<>();
-            sender.put("email", remitente);
-            sender.put("name", "Sportspace");
+            Map<String, Object> from = new HashMap<>();
+            from.put("email", remitente);
+            from.put("name", "Sportspace");
 
             Map<String, Object> body = new HashMap<>();
-            body.put("sender", sender);
+            body.put("from", from);
             body.put("to", List.of(Map.of("email", destinatario)));
             body.put("subject", asunto);
-            body.put("htmlContent", cuerpoHtml);
+            body.put("html", cuerpoHtml);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("api-key", brevoApiKey);
+            headers.setBearerAuth(mailerSendToken);
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-            restTemplate.postForEntity("https://api.brevo.com/v3/smtp/email", request, String.class);
+            restTemplate.postForEntity("https://api.mailersend.com/v1/email", request, String.class);
             log.info("Correo enviado a: {} | Asunto: {}", destinatario, asunto);
         } catch (Exception e) {
             log.error("Error al enviar correo a {}: {}", destinatario, e.getMessage());
