@@ -1,6 +1,6 @@
 'use strict';
 
-const API = 'http://localhost:8080/api';
+const API = '/api';
 
 // ── Estado global ────────────────────────────────────────────────────────────
 let tipoDocumento    = 'DNI';   // "DNI" | "CE"

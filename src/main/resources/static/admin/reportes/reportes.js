@@ -43,7 +43,7 @@ async function descargarReporte(tipo) {
 
         // Llama al backend para descargar el archivo
         const token = getToken();
-        const res   = await fetch('http://localhost:8080/api' + url, {
+        const res   = await fetch('/api' + url, {
             headers: { 'Authorization': 'Bearer ' + token },
         });
 

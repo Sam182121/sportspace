@@ -1,6 +1,6 @@
 'use strict';
 
-const API = 'http://localhost:8080/api';
+const API = '/api';
 
 const ICONS = {
     error: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
