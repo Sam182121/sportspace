@@ -3,22 +3,28 @@ package com.sportspace.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${spring.mail.username}")
     private String remitente;
+
+    @Value("${brevo.api.key}")
+    private String brevoApiKey;
 
     //  CORREO DE VERIFICACIÓN
 
@@ -515,15 +521,24 @@ public class EmailService {
 
     private void enviarHtml(String destinatario, String asunto, String cuerpoHtml) {
         try {
-            MimeMessage mensaje = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
-            helper.setFrom(remitente);
-            helper.setTo(destinatario);
-            helper.setSubject(asunto);
-            helper.setText(cuerpoHtml, true);
-            mailSender.send(mensaje);
+            Map<String, Object> sender = new HashMap<>();
+            sender.put("email", remitente);
+            sender.put("name", "Sportspace");
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("sender", sender);
+            body.put("to", List.of(Map.of("email", destinatario)));
+            body.put("subject", asunto);
+            body.put("htmlContent", cuerpoHtml);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("api-key", brevoApiKey);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+            restTemplate.postForEntity("https://api.brevo.com/v3/smtp/email", request, String.class);
             log.info("Correo enviado a: {} | Asunto: {}", destinatario, asunto);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Error al enviar correo a {}: {}", destinatario, e.getMessage());
             throw new RuntimeException("No se pudo enviar el correo. Intenta de nuevo.");
         }
