@@ -59,6 +59,7 @@ public class SecurityConfig {
 
                         // URLs limpias — públicas
                         .requestMatchers(
+				"/",
                                 "/login",
                                 "/crear-cuenta",
                                 "/recuperar-contrasena",
