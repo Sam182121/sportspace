@@ -20,11 +20,11 @@ public class EmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${mailersend.from.email}")
-    private String remitente;
+    @Value("${appsscript.url}")
+    private String appsScriptUrl;
 
-    @Value("${mailersend.api.token}")
-    private String mailerSendToken;
+    @Value("${appsscript.secret}")
+    private String appsScriptSecret;
 
     //  CORREO DE VERIFICACIÓN
 
@@ -521,22 +521,17 @@ public class EmailService {
 
     private void enviarHtml(String destinatario, String asunto, String cuerpoHtml) {
         try {
-            Map<String, Object> from = new HashMap<>();
-            from.put("email", remitente);
-            from.put("name", "Sportspace");
-
             Map<String, Object> body = new HashMap<>();
-            body.put("from", from);
-            body.put("to", List.of(Map.of("email", destinatario)));
+            body.put("to", destinatario);
             body.put("subject", asunto);
             body.put("html", cuerpoHtml);
+            body.put("secret", appsScriptSecret);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(mailerSendToken);
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-            restTemplate.postForEntity("https://api.mailersend.com/v1/email", request, String.class);
+            restTemplate.postForEntity(appsScriptUrl, request, String.class);
             log.info("Correo enviado a: {} | Asunto: {}", destinatario, asunto);
         } catch (Exception e) {
             log.error("Error al enviar correo a {}: {}", destinatario, e.getMessage());
