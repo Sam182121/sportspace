@@ -619,7 +619,7 @@ async function pedirCodigoEmail() {
         await apiPost('/auth/pre-registro/enviar-codigo-email', { email });
         document.getElementById('email-paso1').style.display = 'none';
         document.getElementById('email-paso2').style.display = 'flex';
-        setHint('hint-codigo-email', 'Código enviado. Revisa tu bandeja de entrada.', 'info');
+        setHint('hint-codigo-email', 'Código enviado. Revisa tu bandeja de ENTRADA o SPAM', 'info');
         document.getElementById('codigo-email').focus();
         iniciarCountdownReenvio('btn-reenviar-email', 60);
     } catch (e) {
