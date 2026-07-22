@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 // DTO que mapea la respuesta de la API de Factiliza
-// tanto para DNI (/v1/dni/info/{dni}) como para C.E. (/v1/cee/info/{cee})
+
 @Data
 public class FactilizaResponse {
 
@@ -15,7 +15,7 @@ public class FactilizaResponse {
     @Data
     public static class DataFactiliza {
 
-        // ── Campos comunes a DNI y C.E. ──
+        // Campos comunes a DNI y C.E.
         @JsonProperty("numero")
         private String numero;
 
@@ -31,7 +31,7 @@ public class FactilizaResponse {
         @JsonProperty("nombre_completo")
         private String nombreCompleto;
 
-        // ── Solo vienen con DNI (C.E. devuelve estos campos vacíos o ausentes) ──
+        // Solo vienen con DNI (C.E. devuelve estos campos vacíos o ausentes)
 
         @JsonProperty("departamento")
         private String departamento;

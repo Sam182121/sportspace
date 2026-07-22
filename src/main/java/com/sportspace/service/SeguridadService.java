@@ -1,11 +1,10 @@
 package com.sportspace.service;
 
 import com.sportspace.entity.IntentoFallido;
-import com.sportspace.entity.Rol;
-import com.sportspace.entity.Usuario;
-import com.sportspace.exception.BadRequestException;
+import com.sportspace.entity.SesionActiva;
 import com.sportspace.exception.ResourceNotFoundException;
 import com.sportspace.repository.IntentoFallidoRepository;
+import com.sportspace.repository.SesionActivaRepository;
 import com.sportspace.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -23,32 +21,7 @@ public class SeguridadService {
 
     private final IntentoFallidoRepository intentoRepo;
     private final UsuarioRepository        usuarioRepo;
-
-    /**
-     * Mapa en memoria: token → SesionInfo.
-     * Se puebla cuando AuthService genera un token exitoso.
-     * Se limpia cuando expira o se revoca desde el panel.
-     */
-    private final Map<String, SesionInfo> sesionesActivas = new ConcurrentHashMap<>();
-
-    // ─────────────────────────────────────────────────────────────────
-    //  INNER RECORD – datos de una sesión activa
-    // ─────────────────────────────────────────────────────────────────
-
-    public record SesionInfo(
-            String sessionId,
-            Long   usuarioId,
-            String nombres,
-            String apellidos,
-            String email,
-            String rol,
-            String ip,
-            LocalDateTime inicioDeSesion
-    ) {}
-
-    // ─────────────────────────────────────────────────────────────────
-    //  REGISTRAR LOGIN FALLIDO
-    // ─────────────────────────────────────────────────────────────────
+    private final SesionActivaRepository   sesionRepo;
 
     @Transactional
     public void registrarIntentoFallido(String ip, String correo) {
@@ -76,30 +49,31 @@ public class SeguridadService {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  REGISTRAR SESIÓN ACTIVA (llamado desde AuthService al hacer login)
-    // ─────────────────────────────────────────────────────────────────
-
+    @Transactional
     public void registrarSesion(String token, Long usuarioId, String nombres,
                                 String apellidos, String email, String rol, String ip) {
-        String sessionId = UUID.randomUUID().toString();
-        SesionInfo info = new SesionInfo(
-                sessionId, usuarioId, nombres, apellidos,
-                email, rol, ip, LocalDateTime.now()
-        );
-        // Guardamos por sessionId Y por token para poder revocar por cualquiera
-        sesionesActivas.put(token, info);
+        if (sesionRepo.findByToken(token).isPresent()) {
+            return;
+        }
+        SesionActiva sesion = SesionActiva.builder()
+                .sessionId(UUID.randomUUID().toString())
+                .token(token)
+                .usuarioId(usuarioId)
+                .nombres(nombres)
+                .apellidos(apellidos)
+                .email(email)
+                .rol(rol)
+                .ip(ip)
+                .inicioDeSesion(LocalDateTime.now())
+                .build();
+        sesionRepo.save(sesion);
         log.debug("Sesión registrada para {} desde {}", email, ip);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  STATS (para las tarjetas del panel)
-    // ─────────────────────────────────────────────────────────────────
-
     public Map<String, Object> getStats() {
-        long intentosFallidos = intentoRepo.count();
-        long ipsBloqueadas    = intentoRepo.countByBloqueadaTrue();
-        long sesionesActivas  = this.sesionesActivas.size();
+        long intentosFallidos   = intentoRepo.count();
+        long ipsBloqueadas      = intentoRepo.countByBloqueadaTrue();
+        long sesionesActivas    = sesionRepo.count();
         long usuariosBloqueados = usuarioRepo.countByBloqueadoPorSeguridadTrue();
 
         LocalDateTime hace24h = LocalDateTime.now().minusHours(24);
@@ -114,9 +88,9 @@ public class SeguridadService {
         return stats;
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  LISTAR INTENTOS FALLIDOS
-    // ─────────────────────────────────────────────────────────────────
+    public long contarSesionesActivas() {
+        return sesionRepo.count();
+    }
 
     public List<Map<String, Object>> listarIntentos() {
         return intentoRepo.findAllByOrderByUltimoIntentoDesc()
@@ -134,44 +108,32 @@ public class SeguridadService {
                 .toList();
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  LISTAR SESIONES ACTIVAS
-    // ─────────────────────────────────────────────────────────────────
-
     public List<Map<String, Object>> listarSesiones(String tokenActual) {
-        return sesionesActivas.entrySet().stream()
-                .map(entry -> {
-                    SesionInfo s = entry.getValue();
+        return sesionRepo.findAll().stream()
+                .map(s -> {
                     Map<String, Object> m = new LinkedHashMap<>();
-                    m.put("sessionId",      s.sessionId());
-                    m.put("usuarioId",      s.usuarioId());
-                    m.put("nombres",        s.nombres());
-                    m.put("apellidos",      s.apellidos());
-                    m.put("email",          s.email());
-                    m.put("rol",            s.rol());
-                    m.put("ip",             s.ip());
-                    m.put("inicioDeSesion", s.inicioDeSesion());
-                    // Marca la sesión del admin que consulta
-                    m.put("esSesionActual", entry.getKey().equals(tokenActual));
+                    m.put("sessionId",      s.getSessionId());
+                    m.put("usuarioId",      s.getUsuarioId());
+                    m.put("nombres",        s.getNombres());
+                    m.put("apellidos",      s.getApellidos());
+                    m.put("email",          s.getEmail());
+                    m.put("rol",            s.getRol());
+                    m.put("ip",             s.getIp());
+                    m.put("inicioDeSesion", s.getInicioDeSesion());
+                    m.put("esSesionActual", s.getToken().equals(tokenActual));
                     return m;
                 })
                 .toList();
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  BLOQUEAR IP
-    // ─────────────────────────────────────────────────────────────────
-
     @Transactional
     public void bloquearIP(String ip) {
-        // Marcamos todas las entradas de esa IP como bloqueadas
         List<IntentoFallido> lista = intentoRepo.findAll()
                 .stream()
                 .filter(i -> ip.equals(i.getIp()))
                 .toList();
 
         if (lista.isEmpty()) {
-            // La IP no tiene intentos previos: la creamos bloqueada
             IntentoFallido nuevo = IntentoFallido.builder()
                     .ip(ip)
                     .correoIntentado("")
@@ -185,29 +147,20 @@ public class SeguridadService {
             intentoRepo.saveAll(lista);
         }
 
-        // También cerramos todas las sesiones activas de esa IP
-        sesionesActivas.entrySet().removeIf(e -> ip.equals(e.getValue().ip()));
+        List<SesionActiva> sesionesDeEsaIp = sesionRepo.findAll().stream()
+                .filter(s -> ip.equals(s.getIp()))
+                .toList();
+        sesionRepo.deleteAll(sesionesDeEsaIp);
     }
-
-    // ─────────────────────────────────────────────────────────────────
-    //  DESBLOQUEAR IP
-    // ─────────────────────────────────────────────────────────────────
 
     @Transactional
     public void desbloquearIP(String ip) {
-        intentoRepo.findAll().stream()
+        List<IntentoFallido> lista = intentoRepo.findAll().stream()
                 .filter(i -> ip.equals(i.getIp()))
-                .forEach(i -> i.setBloqueada(false));
-        intentoRepo.saveAll(
-                intentoRepo.findAll().stream()
-                        .filter(i -> ip.equals(i.getIp()))
-                        .toList()
-        );
+                .toList();
+        lista.forEach(i -> i.setBloqueada(false));
+        intentoRepo.saveAll(lista);
     }
-
-    // ─────────────────────────────────────────────────────────────────
-    //  ELIMINAR INTENTO (ignorar / limpiar)
-    // ─────────────────────────────────────────────────────────────────
 
     @Transactional
     public void eliminarIntento(Long id) {
@@ -217,52 +170,38 @@ public class SeguridadService {
         intentoRepo.deleteById(id);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  CERRAR SESIÓN INDIVIDUAL
-    // ─────────────────────────────────────────────────────────────────
-
+    @Transactional
     public void cerrarSesion(String sessionId) {
-        boolean removed = sesionesActivas.values().removeIf(
-                s -> sessionId.equals(s.sessionId())
-        );
-        // También intentar por sessionId == token directamente
-        sesionesActivas.entrySet().removeIf(e -> sessionId.equals(e.getKey()));
-        if (!removed) {
+        List<SesionActiva> coincidencias = sesionRepo.findAll().stream()
+                .filter(s -> sessionId.equals(s.getSessionId()) || sessionId.equals(s.getToken()))
+                .toList();
+
+        if (coincidencias.isEmpty()) {
             log.warn("Sesión {} no encontrada al intentar cerrarla", sessionId);
+            return;
         }
+        sesionRepo.deleteAll(coincidencias);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  CERRAR TODAS LAS SESIONES (excepto la del admin que ejecuta)
-    // ─────────────────────────────────────────────────────────────────
-
+    @Transactional
     public void cerrarTodasLasSesiones(String tokenActual) {
-        sesionesActivas.entrySet()
-                .removeIf(e -> !e.getKey().equals(tokenActual));
+        List<SesionActiva> otras = sesionRepo.findAll().stream()
+                .filter(s -> !tokenActual.equals(s.getToken()))
+                .toList();
+        sesionRepo.deleteAll(otras);
     }
-
-    // ─────────────────────────────────────────────────────────────────
-    //  VERIFICAR SI UNA IP ESTÁ BLOQUEADA (usado en JwtAuthFilter/AuthService)
-    // ─────────────────────────────────────────────────────────────────
 
     public boolean isIpBloqueada(String ip) {
         return intentoRepo.findAll().stream()
                 .anyMatch(i -> ip.equals(i.getIp()) && Boolean.TRUE.equals(i.getBloqueada()));
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  VERIFICAR SI UN TOKEN YA ESTÁ REGISTRADO COMO SESIÓN
-    // ─────────────────────────────────────────────────────────────────
-
     public boolean isSesionRegistrada(String token) {
-        return sesionesActivas.containsKey(token);
+        return sesionRepo.findByToken(token).isPresent();
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    //  REMOVER SESIÓN POR TOKEN (llamado al expirar)
-    // ─────────────────────────────────────────────────────────────────
-
+    @Transactional
     public void removerSesionPorToken(String token) {
-        sesionesActivas.remove(token);
+        sesionRepo.deleteByToken(token);
     }
 }

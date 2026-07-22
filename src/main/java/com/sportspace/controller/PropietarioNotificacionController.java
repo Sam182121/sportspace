@@ -28,7 +28,7 @@ public class PropietarioNotificacionController {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
 
-    // Lista de notificaciones + contador de no leídas (para la campanita)
+    // Lista de notificaciones + contador de no leidas (para la campanita)
     @GetMapping
     public ResponseEntity<Map<String, Object>> listar(@org.springframework.security.core.annotation.AuthenticationPrincipal UserDetails ud) {
         Usuario p = propietarioActual(ud);

@@ -19,7 +19,7 @@ public class AdminDashboardController {
     private final AdminDashboardService dashboardService;
     private final PagoService           pagoService;
 
-    // ── Dashboard ─────────────────────────────────────────────────────────────
+    // Dashboard
 
     @GetMapping("/api/admin/dashboard/stats")
     public ResponseEntity<DashboardStatsResponse> stats() {
@@ -56,12 +56,12 @@ public class AdminDashboardController {
         return ResponseEntity.ok(dashboardService.getUltimosPagos());
     }
 
-    // ── Pagos (el JS llama a /api/admin/pagos y /api/admin/pagos/ingresos-semana) ──
+    // Pagos
 
     /**
      * GET /api/admin/pagos
-     * Lista completa de pagos que usa la página pagos.html del admin.
-     * Solo lectura — el admin no puede aprobar ni rechazar.
+     * lista completa de pagos que usa la pagina pagos.html del admin.
+     * solo lectura —  admin no puede aprobar ni rechazar.
      */
     @GetMapping("/api/admin/pagos")
     public ResponseEntity<DashboardUltimosPagosResponse> listarPagos() {
@@ -79,7 +79,7 @@ public class AdminDashboardController {
 
     /**
      * GET /api/admin/pagos/ingresos-semana
-     * Gráfico de barras de ingresos diarios (últimos 7 días).
+     * Grafico de barras de ingresos diarios (ultimos 7 días).
      */
     @GetMapping("/api/admin/pagos/ingresos-semana")
     public ResponseEntity<DashboardIngresosSemanaResponse> ingresosSemanaAdmin() {

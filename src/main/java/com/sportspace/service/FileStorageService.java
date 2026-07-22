@@ -16,10 +16,7 @@ import java.util.UUID;
 
 /**
  * Guarda archivos (fotos de canchas, vouchers de pago) en el DISCO del servidor
- * en vez de guardarlos como base64 dentro de la base de datos.
- *
  * En la base de datos solo se guarda la URL/ruta relativa del archivo
- * (ej: "/uploads/canchas/8f2c1e-foto.jpg"), no el archivo en sí.
  */
 @Service
 public class FileStorageService {
@@ -35,7 +32,7 @@ public class FileStorageService {
         return guardar(file, "canchas", TIPOS_IMAGEN);
     }
 
-    /** Guarda un voucher de pago (SOLO imágenes: no se permiten PDF, videos, etc). */
+    /** Guarda un voucher de pago SOLO imágenes. */
     public String guardarVoucher(MultipartFile file) {
         return guardar(file, "vouchers", TIPOS_IMAGEN);
     }
@@ -68,7 +65,7 @@ public class FileStorageService {
         }
     }
 
-    /** Elimina un archivo físico a partir de su URL pública (ej: "/uploads/canchas/xxx.jpg"). */
+    /** Elimina un archivo físico a partir de su URL pública */
     public void eliminar(String url) {
         if (url == null || url.isBlank() || !url.startsWith("/uploads/")) return;
         try {

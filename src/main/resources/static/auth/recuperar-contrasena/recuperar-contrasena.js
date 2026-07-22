@@ -2,7 +2,7 @@
 
 const API = '/api';
 
-/* ── Helpers de alerta ─────────────────────────────────────────────────── */
+/*  Helpers de alerta  */
 const ICONS = {
     error: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -23,7 +23,7 @@ function setAlert(id, msg, type = 'error') {
         : '';
 }
 
-/* ── Enviar solicitud de recuperación ──────────────────────────────────── */
+/*  Enviar solicitud de recuperación  */
 document.getElementById('btn-enviar').addEventListener('click', async () => {
 
     const email = document.getElementById('rc-email').value.trim();
@@ -66,7 +66,7 @@ document.getElementById('btn-enviar').addEventListener('click', async () => {
     }
 });
 
-/* ── Enviar con Enter ───────────────────────────────────────────────────── */
+/* Enviar con Enter */
 document.getElementById('rc-email').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('btn-enviar').click();
 });

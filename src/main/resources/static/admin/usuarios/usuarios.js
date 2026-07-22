@@ -10,7 +10,7 @@ function colorAvatar(id) {
     return AVATAR_COLORS[id % AVATAR_COLORS.length];
 }
 
-// ── Carga inicial ─────────────────────────────────────────────────────────────
+// Carga inicial
 async function cargarUsuarios() {
     const tbody = document.getElementById('tablaUsuarios');
     tbody.innerHTML = loadingRow(9);
@@ -27,7 +27,7 @@ async function cargarUsuarios() {
     }
 }
 
-// ── Estadísticas ──────────────────────────────────────────────────────────────
+// Estadísticas
 function actualizarStats() {
     const total        = usuarios.length;
     const activos      = usuarios.filter(u => estadoStr(u) === 'ACTIVO').length;
@@ -43,7 +43,7 @@ function estadoStr(u) {
     return u.estado || (u.activo !== false ? 'ACTIVO' : 'INACTIVO');
 }
 
-// ── Helpers de documento ──────────────────────────────────────────────────────
+// Helpers de documento
 // Devuelve "DNI" o "C.E." como etiqueta legible
 function labelTipoDoc(tipo) {
     if (!tipo) return '—';
@@ -61,7 +61,7 @@ function badgeDocumento(tipo, numero) {
             <span style="margin-left:5px;font-size:13px">${numero}</span>`;
 }
 
-// ── Tabla ─────────────────────────────────────────────────────────────────────
+// Tabla
 function renderTabla() {
     const tbody = document.getElementById('tablaUsuarios');
     const total = usuariosFiltrados.length;
@@ -163,7 +163,7 @@ function renderTabla() {
     });
 }
 
-// ── Filtros ───────────────────────────────────────────────────────────────────
+//  Filtros
 function filtrarUsuarios() {
     const buscar   = document.getElementById('filtroBuscar').value.trim().toLowerCase();
     const rol      = document.getElementById('filtroRol').value;
@@ -197,7 +197,7 @@ function limpiarFiltros() {
     renderTabla();
 }
 
-// ── Ver perfil ────────────────────────────────────────────────────────────────
+// Ver perfil
 async function verPerfil(id) {
     openModal('modalPerfil');
     document.getElementById('perfilBody').innerHTML =
@@ -268,16 +268,16 @@ async function verPerfil(id) {
     }
 }
 
-// ── Editar usuario ────────────────────────────────────────────────────────────
+// Editar usuario
 //
 // ESTADO del flujo de verificación de correo
 let _euEmailOriginal   = '';   // correo guardado en BD al abrir el modal
 let _euVerificado      = false; // true solo tras verificar código exitosamente
 let _euModoEdicion     = false; // true cuando el lápiz fue pulsado y el campo está activo
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Helpers de hint (iguales a crear-cuenta)
-// ────────────────────────────────────────────────────────────────────────────
+
 const _euIcons = {
     error:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
     success: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -291,9 +291,9 @@ function _euHint(id, msg, type) {
     el.innerHTML = (_euIcons[type]||'') + '<span>' + msg + '</span>';
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Poner el correo en modo SOLO LECTURA con lápiz visible
-// ────────────────────────────────────────────────────────────────────────────
+
 function _euLockEmail(emailValue) {
     const inp  = document.getElementById('eu-email');
     const lapiz= document.getElementById('eu-btn-edit-email');
@@ -304,9 +304,9 @@ function _euLockEmail(emailValue) {
     if (lapiz) lapiz.style.display = 'flex';
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Ocultar el bloque de verificación y resetear sus controles internos
-// ────────────────────────────────────────────────────────────────────────────
+
 function _euResetVerifyBlock() {
     const verifyRow   = document.getElementById('eu-email-verify-row');
     const paso1       = document.getElementById('eu-email-paso1');
@@ -334,10 +334,10 @@ function _euResetVerifyBlock() {
     _euHint('eu-hint-codigo-email', '');
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // LÁPIZ: habilitar edición del correo
 // Llamado desde onclick del botón lápiz en el HTML
-// ────────────────────────────────────────────────────────────────────────────
+
 function euHabilitarEdicionEmail() {
     _euVerificado  = false;
     _euModoEdicion = true;
@@ -354,9 +354,9 @@ function euHabilitarEdicionEmail() {
     inp.focus();
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Pedir código al nuevo correo  (llamado desde btn "Pedir código")
-// ────────────────────────────────────────────────────────────────────────────
+
 async function euPedirCodigo() {
     const email    = (document.getElementById('eu-email').value || '').trim();
     const btnPedir = document.getElementById('eu-btn-pedir-codigo');
@@ -377,19 +377,19 @@ async function euPedirCodigo() {
     }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Habilitar botón "Enviar código" cuando hay exactamente 6 dígitos
 // Llamado desde oninput del input de código en el HTML
-// ────────────────────────────────────────────────────────────────────────────
+
 function euHabilitarEnvio() {
     const codigo  = document.getElementById('eu-codigo-email').value;
     const btnEnv  = document.getElementById('eu-btn-enviar-codigo');
     if (btnEnv) btnEnv.disabled = (codigo.length !== 6);
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Verificar código  (llamado desde btn "Enviar código")
-// ────────────────────────────────────────────────────────────────────────────
+
 async function euVerificarCodigo() {
     const email  = (document.getElementById('eu-email').value || '').trim();
     const codigo = (document.getElementById('eu-codigo-email').value || '').trim();
@@ -416,9 +416,8 @@ async function euVerificarCodigo() {
     }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
 // Countdown reenvío
-// ────────────────────────────────────────────────────────────────────────────
+
 function _euCountdown(btnId, segundos) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
@@ -438,10 +437,10 @@ function _euCountdown(btnId, segundos) {
     }, 1000);
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Validar onblur del campo email (solo activo en modo edición)
 // Registrado como listener en abrirEditar, no como atributo inline
-// ────────────────────────────────────────────────────────────────────────────
+
 async function _euOnEmailBlur() {
     if (!_euModoEdicion) return;   // solo actuar si el lápiz fue pulsado
     if (_euVerificado)   return;   // ya verificado, nada que hacer
@@ -484,9 +483,9 @@ async function _euOnEmailBlur() {
     } catch(e) { _euHint('eu-hint-email', ''); }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // ABRIR MODAL DE EDICIÓN
-// ────────────────────────────────────────────────────────────────────────────
+
 async function abrirEditar(id) {
     // 1. Abrir modal y limpiar estado anterior
     openModal('modalEditar');
@@ -555,9 +554,9 @@ async function abrirEditar(id) {
     }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // GUARDAR EDICIÓN
-// ────────────────────────────────────────────────────────────────────────────
+
 async function guardarEdicion() {
     ocultarEditError();
     const id       = document.getElementById('editId').value;
@@ -611,9 +610,9 @@ async function guardarEdicion() {
     }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
+
 // Helpers de errores del modal de edición
-// ────────────────────────────────────────────────────────────────────────────
+
 function mostrarEditError(msg) {
     const el = document.getElementById('editError');
     if (!el) return;
@@ -628,7 +627,7 @@ function ocultarEditError() {
 }
 
 
-// ── Cambiar estado ────────────────────────────────────────────────────────────
+// Cambiar estado
 function cambiarEstado(id, nuevoEstado, nombre) {
     if (!nuevoEstado) {
         // Bloquear: pide motivo + comentario
@@ -659,7 +658,7 @@ function cambiarEstado(id, nuevoEstado, nombre) {
     );
 }
 
-// ── Eliminar ──────────────────────────────────────────────────────────────────
+// Eliminar
 function eliminarUsuario(id, nombre) {
     confirmar(
         `¿Estás seguro de eliminar al usuario "${nombre}"? Esta acción no se puede deshacer.`,
@@ -677,7 +676,7 @@ function eliminarUsuario(id, nombre) {
     );
 }
 
-// ── Exportar Excel ────────────────────────────────────────────────────────────
+//  Exportar Excel
 async function exportarUsuariosExcel() {
     const btn = document.getElementById('btnExportarExcel');
     if (!usuariosFiltrados.length) {

@@ -1,5 +1,5 @@
 'use strict';
-/* ── BUSCAR CANCHAS ─────────────────────────────────────────── */
+/*  BUSCAR CANCHAS  */
 
 let todasLasCanchas = [];   // caché completo
 let modalReady      = false;
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([cargarUbigeo(), cargarCanchas()]);
 });
 
-/* ── UBIGEO EN CASCADA ─────────────────────────────────────── */
+/* UBIGEO EN CASCADA  */
 async function cargarUbigeo() {
     try {
         const deptos = await api.get('/ubigeo/departamentos');
@@ -61,7 +61,7 @@ function resetSelect(id, placeholder) {
     s.innerHTML = `<option value="">${placeholder}</option>`;
 }
 
-/* ── CARGA INICIAL ─────────────────────────────────────────── */
+/*  CARGA INICIAL */
 async function cargarCanchas() {
     const grid = document.getElementById('canchasGrid');
     grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1"><div class="spinner"></div> Cargando canchas…</div>`;
@@ -78,7 +78,7 @@ async function cargarCanchas() {
     }
 }
 
-/* ── FILTRAR (cliente-side sobre el caché) ──────────────────── */
+/* FILTRAR */
 function filtrar() {
     const txt     = (document.getElementById('searchInput').value || '').toLowerCase().trim();
     const deporte = document.getElementById('selDeporte').value;
@@ -111,7 +111,7 @@ function resetFiltros() {
     renderGrid(todasLasCanchas);
 }
 
-/* ── RENDER GRID ────────────────────────────────────────────── */
+/* RENDER GRID */
 const PIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
 const PLACEHOLDER_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:34px;height:34px;color:rgba(0,0,0,.25)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`;
 
@@ -153,7 +153,7 @@ function renderCanchaCard(c) {
     </div>`;
 }
 
-/* ── MODAL (lazy-load) ──────────────────────────────────────── */
+/* MODAL (lazy-load) */
 async function abrirModal(canchaId) {
     if (!modalReady) {
         const res  = await fetch('/cliente/shared/modal-reserva.html');

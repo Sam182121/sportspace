@@ -24,7 +24,7 @@ public class ReservaController {
 
     private final ReservaService reservaService;
 
-    //  CLIENTE ALQUILAN CANCA
+    //  CLIENTE ALQUILAN CANCHA
     // POST EL CLIENTE ENVIA DATOS DE LA RESERVA, CANCHA HORARIO FECHA
 
     @PostMapping

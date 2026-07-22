@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btnConfirmEliminar').addEventListener('click', confirmarEliminar);
 });
 
-/* ── CARGA ──────────────────────────────────────────────────── */
+/* CARGA  */
 async function cargarCanchas() {
     const grid = document.getElementById('canchasGrid');
     grid.innerHTML = '<div style="grid-column:1/-1"><div class="loading-state"><div class="spinner"></div> Cargando...</div></div>';
@@ -25,7 +25,7 @@ async function cargarCanchas() {
     }
 }
 
-/* ── RENDER CARDS ───────────────────────────────────────────── */
+/*  RENDER CARDS  */
 function renderCanchas(lista) {
     const grid = document.getElementById('canchasGrid');
     if (!lista.length) {
@@ -48,7 +48,7 @@ function renderCanchas(lista) {
         const horariosDisponibles = c.estado !== 'INACTIVA' && c.pendienteAprobacion !== true;
         const publicable = c.publicable === true;
 
-        /* ── badge de estado ── */
+        /*  badge de estado */
         const badgeEstado = {
             PENDIENTE:  '<span class="badge badge-warning">⏳ Pendiente aprobación</span>',
             ACTIVA:     publicada
@@ -58,7 +58,7 @@ function renderCanchas(lista) {
             INACTIVA:   '<span class="badge badge-danger">🚫 Desactivada por admin</span>',
         }[estado] ?? `<span class="badge">${estado}</span>`;
 
-        /* ── aviso cuando admin desactivó (solo si el motivo es ESE, no otro) ── */
+        /*  aviso cuando admin desactivó  */
         const avisoInactiva = estado === 'INACTIVA' ? `
             <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px;font-size:12px;color:#991b1b;margin-top:6px">
                 🚫 El administrador desactivó esta cancha. No puedes editarla ni publicarla.
@@ -72,7 +72,7 @@ function renderCanchas(lista) {
                 Si no es aprobada, elimínala y crea una nueva.
             </div>` : '';
 
-        /* ── aviso: ya usó su edición de este mes ── */
+        /* aviso: ya usó su edición de este mes */
         const avisoEdicionMensual = (estado !== 'INACTIVA' && estado !== 'PENDIENTE' && c.edicionDisponibleDesde) ? `
             <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;font-size:12px;color:#1e40af;margin-top:6px">
                 🔒 Ya usaste tu edición de este mes en esta cancha. Podrás editarla de nuevo el
@@ -205,7 +205,7 @@ function filtrarCanchas(q) {
     ) : todasCanchas);
 }
 
-/* ── PUBLICAR / DESPUBLICAR ─────────────────────────────────── */
+/* PUBLICAR / DESPUBLICAR  */
 async function publicar(id) {
     try {
         const res = await api.patch(`/propietario/canchas/${id}/publicar`, {});
@@ -222,7 +222,7 @@ async function despublicar(id) {
     } catch (e) { toast(e.message || 'Error al ocultar', 'error'); }
 }
 
-/* ── MODAL AGREGAR ──────────────────────────────────────────── */
+/* MODAL AGREGAR */
 function abrirModalAgregar() {
     limpiarFormCancha();
     document.getElementById('modalCanchaTitle').textContent = 'Agregar Cancha';
@@ -234,7 +234,7 @@ function abrirModalAgregar() {
     openModal('modalCancha');
 }
 
-/* ── MODAL EDITAR ───────────────────────────────────────────── */
+/*  MODAL EDITAR  */
 async function abrirModalEditar(id) {
     limpiarFormCancha();
     document.getElementById('modalCanchaTitle').textContent = 'Editar Cancha';
@@ -306,7 +306,7 @@ function limpiarFormCancha() {
     document.getElementById('cDistrito').disabled = true;
 }
 
-/* ── GUARDAR ────────────────────────────────────────────────── */
+/*  GUARDAR  */
 async function guardarCancha() {
     const id = document.getElementById('canchaId').value;
     const fotosActuales = Array.from(
@@ -352,7 +352,7 @@ async function guardarCancha() {
     }
 }
 
-/* ── ELIMINAR ───────────────────────────────────────────────── */
+/*  ELIMINAR  */
 function pedirEliminar(id, nombre) {
     canchaAEliminar = id;
     document.getElementById('confirmNombreCancha').textContent = nombre;
@@ -460,7 +460,7 @@ async function eliminarFotoActual(canchaId, index, btn) {
     } catch { toast('Error al eliminar foto', 'error'); }
 }
 
-/* ── UBIGEO ─────────────────────────────────────────────────── */
+/* UBIGEO */
 async function cargarDepartamentos() {
     try {
         const list = await api.get('/ubigeo/departamentos');
@@ -532,8 +532,6 @@ async function cargarDistritos(provName) {
     } catch { sel.disabled = false; }
 }
 
-// Helper: selecciona un <option> de forma case-insensitive (maneja
-// diferencias Lima/LIMA/lima entre la BD y el API de ubigeo).
 function _selectCI(selectId, value) {
     if (!value) return;
     const sel = document.getElementById(selectId);
@@ -542,7 +540,7 @@ function _selectCI(selectId, value) {
     if (found) sel.value = found.value;
 }
 
-// Carga ubigeo en cascada con pre-seleccion robusta (modo EDITAR)
+// Carga ubigeo en cascada con pre-seleccion (modo EDITAR)
 async function cargarDepartamentosYSeleccionar(dep, prov, dist) {
     await cargarDepartamentos();
 

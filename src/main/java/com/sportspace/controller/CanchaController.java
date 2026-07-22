@@ -19,7 +19,7 @@ public class CanchaController {
 
     private final CanchaService canchaService;
 
-    // ── PÚBLICO ───────────────────────────────────────────────────────────────
+    // PUBLICO
 
     @GetMapping("/publico")
     public ResponseEntity<List<CanchaResponse>> listarActivas() {
@@ -44,7 +44,7 @@ public class CanchaController {
         return ResponseEntity.ok(canchaService.buscarFiltrado(distrito, deporte));
     }
 
-    // ── PROPIETARIO ───────────────────────────────────────────────────────────
+    // PROPIETARIO
 
     @PostMapping
     @PreAuthorize("hasRole('PROPIETARIO')")

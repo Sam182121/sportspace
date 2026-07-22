@@ -11,12 +11,6 @@ import java.util.List;
 
 public interface CanchaRepository extends JpaRepository<Cancha, Long> {
 
-    // FIX — antes solo se chequeaba "estado", por lo que despublicar()
-    // (que solo cambia el campo "activa") no tenía ningún efecto sobre
-    // lo que veía el cliente: una cancha despublicada seguía teniendo
-    // estado='ACTIVA' y por lo tanto seguía apareciendo en /canchas/publico.
-    // Ahora se exige TANTO el nivel de aprobación del admin (estado)
-    // COMO el toggle de visibilidad del propietario (activa).
     @Query("SELECT c FROM Cancha c WHERE c.estado IN ('ACTIVA','DESTACADA') AND c.activa = true")
     List<Cancha> findByActivaTrue();
 

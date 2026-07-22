@@ -15,7 +15,7 @@ public class DashboardUltimosPagosResponse {
         private String     usuarioEmail;      // el JS usa p.usuarioEmail
         private String     metodo;            // el JS usa p.metodo
         private BigDecimal monto;
-        private String     estado;            // COMPLETADO (el JS filtra por APROBADO → lo corregimos abajo)
+        private String     estado;            // COMPLETADO
         private String     fecha;             // el JS usa p.fecha para filtrar por mes
         private Long       reservaId;         // el JS muestra #reservaId
     }

@@ -28,9 +28,7 @@ public class ReporteService {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ══════════════════════════════════════════════════════════════════════════
     // USUARIOS
-    // ══════════════════════════════════════════════════════════════════════════
 
     public byte[] reporteUsuarios(LocalDate inicio, LocalDate fin) throws Exception {
         List<Usuario> lista = usuarioRepository.findAll().stream()
@@ -68,9 +66,7 @@ public class ReporteService {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // RESERVAS
-    // ══════════════════════════════════════════════════════════════════════════
 
     public byte[] reporteReservas(LocalDate inicio, LocalDate fin) throws Exception {
         List<Reserva> lista = reservaRepository.findAll().stream()
@@ -107,9 +103,9 @@ public class ReporteService {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // INGRESOS (solo pagos COMPLETADO con reserva NO cancelada)
-    // ══════════════════════════════════════════════════════════════════════════
+
 
     public byte[] reporteIngresos(LocalDate inicio, LocalDate fin) throws Exception {
         List<Pago> lista = pagoRepository.findAllOrderByCreatedAtDesc().stream()
@@ -173,9 +169,8 @@ public class ReporteService {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // CANCHAS
-    // ══════════════════════════════════════════════════════════════════════════
 
     public byte[] reporteCanchas(LocalDate inicio, LocalDate fin) throws Exception {
         List<Cancha> lista = canchaRepository.findAll();
@@ -223,9 +218,7 @@ public class ReporteService {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // PROPIETARIOS
-    // ══════════════════════════════════════════════════════════════════════════
 
     public byte[] reportePropietarios(LocalDate inicio, LocalDate fin) throws Exception {
         List<Usuario> propietarios = usuarioRepository.findAll().stream()
@@ -283,9 +276,7 @@ public class ReporteService {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // HELPERS
-    // ══════════════════════════════════════════════════════════════════════════
 
     private void escribirEncabezado(XSSFWorkbook wb, Sheet sheet,
                                     String[] headers, String titulo) {

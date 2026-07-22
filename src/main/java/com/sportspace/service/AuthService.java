@@ -87,7 +87,7 @@ public class AuthService {
                     "Tu cuenta está inactiva. Comunícate con soporte en rondomnims9@gmail.com.");
         }
 
-        // ── DOBLE ROL: si tiene CLIENTE y PROPIETARIO, pedir que elija ──
+        // DOBLE ROL: si tiene CLIENTE y PROPIETARIO, pedir que elija
         boolean tieneCliente     = usuario.tieneRolCliente();
         boolean tienePropietario = usuario.tieneRolPropietario();
 
@@ -234,9 +234,7 @@ public class AuthService {
         return toResponse(guardado);
     }
 
-    // ─────────────────────────────────────────────────────────────────
     //  UTILIDADES
-    // ─────────────────────────────────────────────────────────────────
 
     private String obtenerIpActual() {
         try {

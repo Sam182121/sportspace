@@ -57,7 +57,7 @@ public class SecurityConfig {
 
                         ).permitAll()
 
-                        // URLs limpias — públicas
+                        // URLs limpias — publicas
                         .requestMatchers(
 				"/",
                                 "/login",
@@ -104,7 +104,7 @@ public class SecurityConfig {
                                 "/api/auth/reenviar-codigo-email"
                         ).permitAll()
 
-                        // API pública (sin token)
+                        // API publica (sin token)
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/reniec/**").permitAll()
                         .requestMatchers("/api/ubigeo/**").permitAll()
@@ -117,9 +117,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/propietario/**").hasRole("PROPIETARIO")
                         .requestMatchers("/api/cliente/**").hasRole("CLIENTE")
 
-                        // ── MÓDULO DE PAGOS ──────────────────────────────
+                        // Modulo pagos
                         // El @PreAuthorize en cada endpoint ya controla el rol.
-                        // Aquí solo indicamos que necesitan autenticación.
+                        // Aqui solo indicamos que necesitan autenticacion.
                         .requestMatchers("/api/pagos/**").authenticated()
 
                         .anyRequest().authenticated()

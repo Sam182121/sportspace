@@ -89,7 +89,7 @@ public class ReporteController {
         }
     }
 
-    // ── Helper ────────────────────────────────────────────────────────────────
+    // Helpers
 
     private ResponseEntity<byte[]> excelResponse(byte[] bytes, String filename) {
         return ResponseEntity.ok()

@@ -83,7 +83,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     // Todas las reservas en un estado dado (usado por el scheduler de completadas)
     List<Reserva> findByEstado(EstadoReserva estado);
 
-    // ── Borrado en cascada (eliminación forzada de usuario) ──
+    // Borrado en cascada (eliminación forzada de usuario)
     @org.springframework.data.jpa.repository.Modifying
     @Query("DELETE FROM Reserva r WHERE r.cliente.id = :clienteId")
     void deleteByClienteId(@Param("clienteId") Long clienteId);
@@ -92,7 +92,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     @Query("DELETE FROM Reserva r WHERE r.cancha.propietario.id = :propietarioId")
     void deleteByCanchaPropietarioId(@Param("propietarioId") Long propietarioId);
 
-    // ── Badges de la sección Reservas (propietario) ──
+    // Badges de la sección Reservas (propietario)
     @Query("""
         SELECT COUNT(r) FROM Reserva r
         WHERE r.cancha.propietario.id = :propietarioId AND r.estado = 'PENDIENTE'

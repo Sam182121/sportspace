@@ -11,7 +11,7 @@ public class UsuarioEditRequest {
     /** Nuevo correo electronico obligatorio, debe ser único). */
     private String email;
 
-    /** Nuevo telefono opcional, 9 dígitos.. */
+    /** Nuevo telefono opcional, 9 dígitos */
     private String telefono;
 
     /**

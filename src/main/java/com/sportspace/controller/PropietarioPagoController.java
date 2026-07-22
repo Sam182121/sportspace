@@ -99,7 +99,7 @@ public class PropietarioPagoController {
             default       -> iniMes; // "mes"
         };
 
-        // Últimos pagos filtrados por periodo — incluye TODOS los estados para mostrar reembolsos
+        // Ultimos pagos filtrados por periodo — incluye TODOS los estados para mostrar reembolsos
         List<Map<String, Object>> ultimos = pagos.stream()
                 .filter(p -> {
                     LocalDate refDate = p.getFechaPago() != null

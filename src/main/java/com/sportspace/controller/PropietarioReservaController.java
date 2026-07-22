@@ -36,7 +36,7 @@ public class PropietarioReservaController {
     private final EmailService       emailService;
     private final NotificacionService notificacionService;
 
-    // ── GET /api/propietario/reservas?estado=PENDIENTE ───────────
+    // GET /api/propietario/reservas?estado=PENDIENTE
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> listar(
             @RequestParam(required = false) String estado,
@@ -69,7 +69,7 @@ public class PropietarioReservaController {
         return ResponseEntity.ok(reservas.stream().map(this::toMap).toList());
     }
 
-    // ── GET /api/propietario/reservas/{id} ───────────────────────
+    // GET /api/propietario/reservas/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> detalle(
             @PathVariable Long id,
@@ -78,7 +78,7 @@ public class PropietarioReservaController {
         return ResponseEntity.ok(toMapDetalle(r));
     }
 
-    // ── PATCH /api/propietario/reservas/{id}/aprobar ─────────────
+    // PATCH /api/propietario/reservas/{id}/aprobar
     @PatchMapping("/{id}/aprobar")
     public ResponseEntity<Map<String, Object>> aprobar(
             @PathVariable Long id,
@@ -224,7 +224,7 @@ public class PropietarioReservaController {
         r.setMotivoRechazo((motivo + " " + mensaje).trim());
         reservaRepo.save(r);
 
-        // El pago se mantiene en COMPLETADO → queda automáticamente "en
+        // El pago se mantiene en COMPLETADO  queda automáticamente "en
         // reembolso" mediante el mismo mecanismo usado cuando cancela el cliente.
         pagoRepo.findByReservaId(r.getId()).ifPresent(p -> {
             p.setNotas((motivo + " " + mensaje).trim());
@@ -264,7 +264,7 @@ public class PropietarioReservaController {
         return ResponseEntity.ok(Map.of("mensaje", "Reserva cancelada, pendiente de reembolso"));
     }
 
-    // ── Helpers ──────────────────────────────────────────────────
+    // Helpers
     private Map<String, Object> toMap(Reserva r) {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("id",             r.getId());

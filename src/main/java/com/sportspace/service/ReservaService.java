@@ -40,7 +40,7 @@ public class ReservaService {
     private final PagoRepository           pagoRepository;
     private final NotificacionService      notificacionService;
 
-    // ── CLIENTE: crear reserva ────────────────────────────────────────────────
+    //  CLIENTE: crear reserva
 
     @Transactional
     public ReservaResponse crear(ReservaRequest request) {
@@ -109,7 +109,7 @@ public class ReservaService {
         return toResponse(guardada);
     }
 
-    // ── CLIENTE: ver mis reservas ─────────────────────────────────────────────
+    // CLIENTE: ver mis reservas
 
     public List<ReservaResponse> misReservas() {
         Usuario cliente = getUsuarioAutenticado();
@@ -118,7 +118,7 @@ public class ReservaService {
                 .stream().map(this::toResponse).toList();
     }
 
-    // ── CLIENTE: cancelar mi reserva ──────────────────────────────────────────
+    // CLIENTE: cancelar mi reserva
 
     @Transactional
     public ReservaResponse cancelarMiReserva(Long id) {
@@ -175,7 +175,7 @@ public class ReservaService {
         return toResponse(guardada);
     }
 
-    // ── PROPIETARIO: reservas de su cancha ────────────────────────────────────
+    // PROPIETARIO: reservas de su cancha
 
     public List<ReservaResponse> reservasPorCancha(Long canchaId) {
         Usuario propietario = getUsuarioAutenticado();
@@ -198,7 +198,7 @@ public class ReservaService {
                 .stream().map(this::toResponse).toList();
     }
 
-    // ── PROPIETARIO / ADMIN: cambiar estado (endpoint original) ──────────────
+    // PROPIETARIO / ADMIN: cambiar estado
 
     @Transactional
     public ReservaResponse cambiarEstado(Long id, CambioEstadoRequest request) {
@@ -215,7 +215,7 @@ public class ReservaService {
         return toResponse(reservaRepository.save(reserva));
     }
 
-    // ── ADMIN: cambiar estado (endpoint nuevo del panel admin) ────────────────
+    // ADMIN: cambiar estado
 
     @Transactional
     public ReservaResponse cambiarEstadoAdmin(Long id, String estadoStr) {
@@ -234,7 +234,7 @@ public class ReservaService {
         return toResponse(reservaRepository.save(reserva));
     }
 
-    // ── ADMIN: procesar reembolso ─────────────────────────────────────────────
+    // ADMIN: procesar reembolso
 
     @Transactional
     public ReservaResponse procesarReembolso(Long id) {
@@ -254,7 +254,7 @@ public class ReservaService {
         return toResponse(reservaRepository.save(reserva));
     }
 
-    // ── DISPONIBILIDAD ────────────────────────────────────────────────────────
+    // DISPONIBILIDAD
 
     /**
      * Calcula la disponibilidad real de una cancha para una fecha:
@@ -324,7 +324,7 @@ public class ReservaService {
                 .build();
     }
 
-    // ── ADMIN: listar todas ───────────────────────────────────────────────────
+    // ADMIN: listar todas
 
     public List<ReservaResponse> listarTodas() {
         return reservaRepository.findAllOrderByCreatedAtDesc()
@@ -335,14 +335,14 @@ public class ReservaService {
         return toResponse(buscarPorId(id));
     }
 
-    // ── INGRESOS ──────────────────────────────────────────────────────────────
+    // INGRESOS
 
     public BigDecimal misIngresos() {
         Usuario propietario = getUsuarioAutenticado();
         return reservaRepository.sumIngresosConfirmados(propietario.getId());
     }
 
-    // ── HELPERS PRIVADOS ──────────────────────────────────────────────────────
+    // HELPERS PRIVADOS
 
     private Reserva buscarPorId(Long id) {
         return reservaRepository.findById(id)

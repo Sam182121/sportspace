@@ -12,9 +12,7 @@ import java.util.Map;
 
 /**
  * Panel de administración de reservas.
- *
  * El reembolso lo gestiona el PROPIETARIO, no el admin.
- * Por eso el endpoint /reembolso fue eliminado de aquí.
  */
 @RestController
 @RequestMapping("/api/admin/reservas")
@@ -38,7 +36,7 @@ public class AdminReservaController {
 
     /**
      * PATCH /api/admin/reservas/{id}/estado
-     * Body: { "estado": "CONFIRMADA" | "CANCELADA" }
+     * Body: { "estado": "CONFIRMADA"  "CANCELADA" }
      */
     @PatchMapping("/{id}/estado")
     public ResponseEntity<ReservaResponse> cambiarEstado(

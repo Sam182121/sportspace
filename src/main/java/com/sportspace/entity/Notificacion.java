@@ -17,7 +17,7 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Destinatario de la notificación: puede ser un PROPIETARIO o un CLIENTE. */
+    /** Destinatario de la notificación puede ser un PROPIETARIO o un CLIENTE. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     @com.fasterxml.jackson.annotation.JsonIgnore

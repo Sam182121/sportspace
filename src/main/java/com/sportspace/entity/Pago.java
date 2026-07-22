@@ -46,16 +46,14 @@ public class Pago {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    // FIX — antes LONGTEXT (base64 completo). Ahora VARCHAR(500): solo
-    // se guarda la URL de Cloudinary, ej:
-    // "https://res.cloudinary.com/tucloud/image/upload/v123/voucher_abc.jpg"
+    // se guarda la URL de Cloudinary"
     @Column(name = "voucher_url", length = 500)
     private String voucherUrl;
 
     @Column(name = "voucher_reembolso_url", length = 500)
     private String voucherReembolsoUrl;
 
-    // ── Enums ────────────────────────────────────────────────────────────────
+    // Enums
 
     public enum MetodoPago {
         EFECTIVO, TRANSFERENCIA, YAPE, PLIN

@@ -14,27 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Algoritmo unico para eliminar cuentas (CLIENTE, PROPIETARIO o ambos) desde el
- * panel admin.
- *
- * Reglas:
- * 1) Si tiene reservas ACTIVAS (PENDIENTE/CONFIRMADA), como cliente o como
- *    propietario (via sus canchas) -> SIEMPRE se bloquea, sin importar el
- *    motivo ni si se pidio "forzar". Hay que resolverlas primero.
- * 2) Si el admin marca "forzar = true" -> ELIMINACION TOTAL: se borra en
- *    cascada TODO lo relacionado (pagos, reservas, horarios, fechas
- *    bloqueadas, metodos de pago, notificaciones, codigos de verificacion,
- *    canchas) y finalmente el usuario. Es irreversible y borra historial
- *    real de terceros (ej. reservas de otros clientes en sus canchas).
- * 3) Si "forzar = false" (por defecto, mas seguro):
- *    - Sin historial (0 reservas como cliente, 0 canchas) -> DELETE fisico simple.
- *    - Con historial -> se ANONIMIZA en vez de borrar (se reemplazan sus
- *      datos personales, se desactiva la cuenta y sus canchas) para no
- *      romper el historial de reservas/pagos de la otra parte.
- *
- * Siempre se registra un log de auditoria con el motivo indicado.
- */
+
 @Service
 @RequiredArgsConstructor
 public class EliminacionUsuarioService {
@@ -66,7 +46,7 @@ public class EliminacionUsuarioService {
         if (motivoNormalizado.equals("OTRO") && (comentario == null || comentario.isBlank()))
             throw new BadRequestException("Debes escribir un comentario cuando el motivo es 'Otro'");
 
-        // ── Reservas activas: bloqueo total, SIEMPRE, incluso si se pide forzar ──
+        // Reservas activas: bloqueo total, SIEMPRE, incluso si se pide forzar
         List<Reserva> reservasComoCliente = reservaRepository.findByClienteIdOrderByFechaDescHoraInicioDesc(id);
         long activasComoCliente = reservasComoCliente.stream().filter(this::esActiva).count();
         if (activasComoCliente > 0) {
@@ -143,7 +123,7 @@ public class EliminacionUsuarioService {
         reservaRepository.deleteByClienteId(id);
 
         // 2) Como PROPIETARIO: pagos y reservas de sus canchas, horarios, fechas
-        //    bloqueadas, métodos de pago y finalmente las canchas
+        //    bloqueadas, metodos de pago y finalmente las canchas
         pagoRepository.deleteByReservaCanchaPropietarioId(id);
         reservaRepository.deleteByCanchaPropietarioId(id);
 
@@ -159,7 +139,7 @@ public class EliminacionUsuarioService {
         notificacionRepository.deleteByUsuarioId(id);
         codigoVerificacionRepository.deleteByUsuarioId(id);
 
-        // 4) Por último, el usuario
+        // 4) Por ultimo, el usuario
         usuarioRepository.deleteById(id);
     }
 

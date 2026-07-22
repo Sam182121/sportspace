@@ -1,6 +1,6 @@
 'use strict';
 
-// ── Cloudinary upload ──────────────────────────────────────────
+// Cloudinary upload
 const CLOUDINARY_CLOUD_NAME    = 'dnwetom28';
 const CLOUDINARY_UPLOAD_PRESET = 'sportspace_unsigned';
 
@@ -17,7 +17,7 @@ async function uploadToCloudinary(file, carpeta = 'sportspace') {
     const d = await r.json();
     return d.secure_url;
 }
-// ───────────────────────────────────────────────────────────────
+//
 /**
  * Sube un File al CDN de Cloudinary y devuelve la URL segura (https).
  *
@@ -25,10 +25,6 @@ async function uploadToCloudinary(file, carpeta = 'sportspace') {
  * @param {string} carpeta  - Subcarpeta en Cloudinary (ej: 'vouchers', 'canchas')
  * @param {function} onProgress - Callback opcional: recibe % de progreso (0-100)
  * @returns {Promise<string>} URL pública del archivo subido
- *
- * Uso:
- *   const url = await uploadToCloudinary(file, 'vouchers');
- *   // url = "https://res.cloudinary.com/tucloud/image/upload/v.../vouchers/abc.jpg"
  */
 async function uploadToCloudinary(file, carpeta = 'sportspace', onProgress = null) {
     if (!file) throw new Error('No se proporcionó ningún archivo');
@@ -80,7 +76,7 @@ async function uploadToCloudinary(file, carpeta = 'sportspace', onProgress = nul
 
 /**
  * Helper: muestra un estado de carga mientras sube y luego el nombre del archivo.
- * Se usa en cualquier zona de drag&drop de la app.
+ * Se usa en cualquier zona de dragdrop de la app.
  *
  * @param {File}     file         - Archivo a subir
  * @param {string}   carpeta      - Carpeta en Cloudinary

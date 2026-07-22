@@ -66,7 +66,6 @@ public class Cancha {
     private String estado = "PENDIENTE";
 
     /**
-     * Campo físico en BD — requerido por MySQL.
      * true  = cancha visible/activa
      * false = cancha inactiva/desactivada
      * Se sincroniza con 'estado': ACTIVA o DESTACADA → activa=true
@@ -96,8 +95,7 @@ public class Cancha {
     private String tipoSuperficie;
 
     /**
-     * Fotos de la cancha (máx. 3).
-     * LONGTEXT soporta base64 completo (imágenes).
+     * Fotos de la cancha (max 3).
      */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(

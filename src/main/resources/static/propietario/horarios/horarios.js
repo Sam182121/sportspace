@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-/* ── CARGAR LISTA DE CANCHAS ──────────────────────────────────── */
+/* CARGAR LISTA DE CANCHAS */
 async function cargarCanchas() {
     try {
         const list = await api.get('/propietario/canchas');
@@ -43,11 +43,7 @@ async function cambiarCancha(id) {
     renderHorario();
 }
 
-/* ── INICIALIZAR: todos los días DESACTIVADOS para cancha nueva ──────
-   Antes: L-V activos 08-22 por defecto, lo que hacía que una cancha
-   recién creada mostrara horarios "prendidos" aunque nunca se hubieran
-   configurado. Ahora todos los días parten desactivados. El propietario
-   los activa manualmente según su disponibilidad real. ─────────────── */
+
 function inicializarHorario() {
     horarioData = {};
     for (let d = 0; d < 7; d++) {
@@ -59,7 +55,7 @@ function inicializarHorario() {
     }
 }
 
-/* ── CARGAR DESDE API ─────────────────────────────────────────── */
+/* CARGAR DESDE API  */
 async function cargarHorarioDesdeAPI() {
     if (!canchaIdActual) return;
     try {
@@ -90,7 +86,7 @@ async function cargarHorarioDesdeAPI() {
     } catch { /* usar defaults */ }
 }
 
-/* ── RENDER PRINCIPAL ─────────────────────────────────────────── */
+/* RENDER PRINCIPAL */
 function renderHorario() {
     const contenido = document.getElementById('contenidoHorarios');
 
@@ -165,7 +161,7 @@ function renderHorario() {
         </div>`;
 }
 
-/* ── TOGGLE DÍA ───────────────────────────────────────────────── */
+/*  TOGGLE DÍA  */
 function toggleDia(d, activo) {
     horarioData[d].activo = activo;
     const row   = document.getElementById(`diaRow${d}`);
@@ -181,7 +177,7 @@ function toggleDia(d, activo) {
     actualizarResumen(d);
 }
 
-/* ── CAMBIAR HORA ─────────────────────────────────────────────── */
+/*  CAMBIAR HORA  */
 function cambiarHora(d, tipo, val) {
     const v = parseInt(val);
     horarioData[d][tipo] = v;
@@ -211,7 +207,7 @@ function renderResumen(d) {
             <span class="resumen-cant">${horas}h disponible${horas !== 1 ? 's' : ''}</span>`;
 }
 
-/* ── COPIAR L-V A TODOS ───────────────────────────────────────── */
+/* COPIAR L-V A TODOS */
 function aplicarATodos() {
     // Toma el horario del Lunes como referencia
     const ref = horarioData[0];
@@ -231,7 +227,7 @@ function aplicarATodos() {
     toast('Horario del Lunes copiado a todos los días', 'success');
 }
 
-/* ── GUARDAR ──────────────────────────────────────────────────── */
+/*  GUARDAR  */
 async function guardarHorario() {
     if (!canchaIdActual) return;
 

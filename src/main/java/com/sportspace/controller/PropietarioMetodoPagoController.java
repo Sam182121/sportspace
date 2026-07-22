@@ -26,7 +26,7 @@ public class PropietarioMetodoPagoController {
 
     private static final List<String> TIPOS_VALIDOS = List.of("TRANSFERENCIA", "YAPE", "PLIN");
 
-    // ── GET /api/propietario/metodos-pago ────────────────────────
+    // GET /api/propietario/metodos-pago
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> listar(
             @AuthenticationPrincipal UserDetails ud) {
@@ -39,7 +39,7 @@ public class PropietarioMetodoPagoController {
         return ResponseEntity.ok(result);
     }
 
-    // ── POST /api/propietario/metodos-pago ───────────────────────
+    // POST /api/propietario/metodos-pago
     // Crea o actualiza el método de pago de un tipo (upsert)
     @PostMapping
     public ResponseEntity<Map<String, Object>> guardar(
@@ -88,7 +88,7 @@ public class PropietarioMetodoPagoController {
                 "id",      metodo.getId()));
     }
 
-    // ── PATCH /api/propietario/metodos-pago/{id}/toggle ──────────
+    // PATCH /api/propietario/metodos-pago/{id}/toggle
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<Map<String, Object>> toggle(
             @PathVariable Long id,
@@ -102,7 +102,7 @@ public class PropietarioMetodoPagoController {
                 "activo",  m.getActivo()));
     }
 
-    // ── DELETE /api/propietario/metodos-pago/{id} ────────────────
+    // DELETE /api/propietario/metodos-pago/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> eliminar(
             @PathVariable Long id,
@@ -112,11 +112,10 @@ public class PropietarioMetodoPagoController {
         return ResponseEntity.ok(Map.of("mensaje", "Método de pago eliminado"));
     }
 
-    // ── GET PÚBLICO: métodos activos de propietario de una cancha ─
+    // ── GET PÚBLICO: métodos activos de propietario de una cancha
     // (Para mostrar al cliente al reservar — no necesita auth de propietario)
-    // Se expone en otro controller público; aquí solo el privado
 
-    // ── Helpers ──────────────────────────────────────────────────
+    // Helpers
     private Map<String, Object> toMap(MetodoPagoPropietario m) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id",             m.getId());

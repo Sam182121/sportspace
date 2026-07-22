@@ -12,7 +12,6 @@ public class ConfirmarPagoRequest {
     private String notas;
 
     /**
-     * Comprobante (voucher) de la devolución en base64 (data URL).
      * Solo se usa en el endpoint de reembolso.
      */
     private String voucherUrl;

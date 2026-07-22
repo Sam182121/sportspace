@@ -5,11 +5,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-/**
- * Auditoría de cuando un ADMIN elimina o anonimiza una cuenta de usuario.
- * Guarda un snapshot de los datos porque el usuario puede haber sido
- * borrado o anonimizado (ya no se puede confiar en leer Usuario por id).
- */
 @Entity
 @Table(name = "eliminaciones_usuario_log")
 @Getter @Setter
@@ -34,7 +29,7 @@ public class EliminacionUsuarioLog {
     @Column(length = 20)
     private String rol;
 
-    /** SOLICITADO_POR_USUARIO | MAL_USO_PLATAFORMA | CUENTA_DUPLICADA_PRUEBA | OTRO */
+    /** SOLICITADO POR USUARIO | MAL USO PLATAFORMA | CUENTA DUPLICADA PRUEBA | OTRO */
     @Column(nullable = false, length = 40)
     private String motivo;
 

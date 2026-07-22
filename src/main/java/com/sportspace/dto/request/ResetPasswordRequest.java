@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // Paso 2: el usuario abre el enlace, ingresa su nueva contraseña y la confirma
-// ─────────────────────────────────────────────────────────────────────────────
+
 // Uso: POST /api/auth/reset-password
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 @Data
 public class ResetPasswordRequest {

@@ -1,5 +1,5 @@
 'use strict';
-/* ── MIS RESERVAS ────────────────────────────────────────────── */
+/* MIS RESERVAS */
 
 let _todas       = [];
 let _tabActual    = 'activas';
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarReservas();
 });
 
-/* ── CARGA ──────────────────────────────────────────────────── */
+/* CARGA */
 async function cargarReservas() {
     try {
         _todas = await api.get('/reservas/mis-reservas');
@@ -34,7 +34,7 @@ async function cargarReservas() {
     }
 }
 
-/* ── STATS ──────────────────────────────────────────────────── */
+/* STATS */
 function calcularStats() {
     const ahora = Date.now();
     const pend  = _todas.filter(r => r.estado === 'PENDIENTE').length;
@@ -53,7 +53,7 @@ function calcularStats() {
     setNavBadgeReservas(pend + conf);
 }
 
-/* ── TABS ───────────────────────────────────────────────────── */
+/* TABS */
 function switchTab(tab) {
     _tabActual = tab;
     document.getElementById('tabActivas').classList.toggle('active',   tab === 'activas');
@@ -120,7 +120,7 @@ function renderTab(tab) {
     }
 }
 
-/* ── FILTRO Y BÚSQUEDA (Historial) ──────────────────────────── */
+/*  FILTRO Y BÚSQUEDA (Historial) */
 let _filtroHistorial = 'todas';
 let _buscarHistorial = '';
 
@@ -140,7 +140,7 @@ function buscarEnHistorial(valor) {
     renderTab('historial');
 }
 
-/* ── RENDER CARDS ───────────────────────────────────────────── */
+/* RENDER CARDS  */
 /* Spring sin write-dates-as-timestamps=false devuelve arrays: fecha=[2026,7,15], hora=[9,0,0].
    _fechaStr() normaliza ambos formatos a "YYYY-MM-DD" para que new Date() funcione. */
 function _fechaStr(r) {
@@ -204,11 +204,6 @@ function renderCard(r, mostrarCancelar) {
     const esPendiente = r.estado === 'PENDIENTE';
     const esConfirmada= r.estado === 'CONFIRMADA';
 
-    // PENDIENTE: se puede cancelar libremente en cualquier momento
-    //   (el propietario aún no aprobó el pago — no hay compromiso firmado).
-    // CONFIRMADA: solo si el partido no empezó todavía.
-    //   La restricción de 24h la valida el backend; el frontend solo oculta
-    //   el botón si el partido ya comenzó (no tiene sentido mostrarlo).
     let btnCancelar = '';
     if (mostrarCancelar) {
         // PENDIENTE: no se puede cancelar — el propietario aún no ha aprobado.
@@ -243,7 +238,7 @@ function renderCard(r, mostrarCancelar) {
     </div>`;
 }
 
-/* ── VER DETALLES (estado real: aprobada / rechazada / en reembolso / reembolsada) ─ */
+/* VER DETALLES (estado real: aprobada / rechazada / en reembolso / reembolsada) */
 async function verDetalle(reservaId) {
     _detalleResId = reservaId;
     document.getElementById('modalDetalle').classList.add('open');
@@ -361,7 +356,7 @@ function cerrarModalDetalle(e) {
     document.body.style.overflow = '';
 }
 
-/* ── CANCELAR ───────────────────────────────────────────────── */
+/* CANCELAR  */
 function pedirCancelar(id, nombre, fecha) {
     _cancelarId = id;
     const reserva = _todas.find(r => r.id === id);
@@ -410,7 +405,7 @@ async function ejecutarCancelar() {
     }
 }
 
-/* ── LIGHTBOX (ver comprobante sin salir de la página) ────────── */
+/* LIGHTBOX ver comprobante */
 function verImagenZoom(url) {
     if (!url) return;
     let lb = document.getElementById('imgZoomOverlay');

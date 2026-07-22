@@ -5,7 +5,7 @@ const API = '/api';
 /* ruta segun el rol */
 const RUTAS = {
     ADMIN:       '/admin/dashboard',
-    PROPIETARIO: '/propietario/reservas',
+    PROPIETARIO: '/propietario/canchas',
     CLIENTE:     '/cliente/buscar',
 };
 
@@ -84,7 +84,7 @@ function borrarCredenciales() {
     localStorage.removeItem('ss_remember_pwd');
 }
 
-/* ── helpers de hint por campo ───────────────────────────────── */
+/* helpers de hint por campo  */
 function setHint(id, msg, type = '') {
     const el = document.getElementById(id);
     if (!el) return;
@@ -98,7 +98,7 @@ function setHint(id, msg, type = '') {
     el.innerHTML = `${icons[type] || ''}<span>${msg}</span>`;
 }
 
-/* ── validación email en tiempo real (onblur) ────────────────── */
+/* validación email en tiempo real */
 document.getElementById('login-email').addEventListener('blur', async function () {
     const email = this.value.trim();
     if (!email) {
@@ -127,7 +127,7 @@ document.getElementById('login-email').addEventListener('input', function () {
     setHint('hint-email', '');  // limpiar hint mientras escribe
 });
 
-/* ── validación password en tiempo real (onblur) ─────────────── */
+/* validación password en tiempo real */
 document.getElementById('login-password').addEventListener('blur', function () {
     const pwd = this.value;
     if (!pwd) {
@@ -179,7 +179,7 @@ document.getElementById('btn-login').onclick = async () => {
     try {
         const data = await apiPost('/auth/login', { email, password });
 
-        // ── DOBLE ROL: pedir con cuál desea ingresar ──
+        // DOBLE ROL: pedir con cuál desea ingresar
         if (data.requiereSeleccion) {
             btn.innerHTML = 'Iniciar sesion';
             btn.disabled  = false;
@@ -234,7 +234,7 @@ document.getElementById('login-password').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('btn-login').click();
 });
 
-/* ── guarda la sesión (token/user) y redirige según el rol ────── */
+/* guarda la sesión (token/user) y redirige según el rol*/
 function guardarSesionYRedirigir(data, remember, email, password) {
     if (remember) {
         localStorage.setItem('ss_token', data.token);
@@ -252,7 +252,7 @@ function guardarSesionYRedirigir(data, remember, email, password) {
     window.location.href = RUTAS[data.rol] || '/login';
 }
 
-/* ── pantalla "¿Cómo deseas ingresar?" para doble rol ──────────── */
+/* pantalla "¿Cómo deseas ingresar?" para doble rol*/
 function mostrarSeleccionRol(data, remember) {
     document.getElementById('rol-bienvenida').textContent = `Bienvenido, ${data.nombreMostrar || ''}`;
     document.getElementById('rol-overlay-error').textContent = '';

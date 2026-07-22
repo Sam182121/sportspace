@@ -26,7 +26,7 @@ public class ReservaResponse {
 
     private String        canceladoPor;
 
-    // ── Cancha ────────────────────────────────────────────────────────────────
+    // Cancha
     private Long       canchaId;
     private String     canchaNombre;
     private String     canchaDeporte;
@@ -37,7 +37,7 @@ public class ReservaResponse {
     private String     canchaDistrito;
 
     /**
-     * FIX — el JS usa r.canhaDistrito (typo con una h) y también r.canchaDireccion.
+     * FIX — el JS usa r.canchaDistrito (typo con una h) y también r.canchaDireccion.
      * Exponemos ambos para que funcione sin importar cuál use el JS.
      */
     private String     canhaDistrito;      // typo intencional para compatibilidad con el JS
@@ -45,7 +45,7 @@ public class ReservaResponse {
 
     private BigDecimal canchaPrecioHora;
 
-    // ── Cliente ───────────────────────────────────────────────────────────────
+    // Cliente
     private Long   clienteId;
     private String clienteNombre;
     private String clienteEmail;

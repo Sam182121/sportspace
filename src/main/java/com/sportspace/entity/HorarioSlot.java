@@ -24,7 +24,7 @@ public class HorarioSlot {
     @Column(nullable = false)
     private Integer hora;
 
-    /** DISPONIBLE | BLOQUEADO | MANTENIMIENTO | SIN_ESTADO */
+    /** DISPONIBLE | BLOQUEADO | MANTENIMIENTO | SIN ESTADO */
     @Column(nullable = false, length = 20)
     @Builder.Default
     private String estado = "DISPONIBLE";

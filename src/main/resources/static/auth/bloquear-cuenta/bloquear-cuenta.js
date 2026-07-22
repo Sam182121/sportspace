@@ -6,7 +6,7 @@ const params = new URLSearchParams(window.location.search);
 const TOKEN  = params.get('token') || '';
 const EMAIL  = params.get('email') || '';
 
-// ── Helpers de UI ──────────────────────────────────────────────────────────
+// Helpers de UI
 
 function mostrarVista(id) {
     ['view-bloqueo', 'view-bloqueado', 'view-invalido'].forEach(v => {
@@ -32,7 +32,7 @@ function setAlert(id, msg, type = 'error') {
         : '';
 }
 
-// ── Validar token al cargar la página ─────────────────────────────────────
+// Validar token al cargar la página
 // Si el token ya fue usado o expiró mostramos la vista de enlace inválido
 // ANTES de que el usuario vea el formulario de bloqueo.
 async function inicializar() {
@@ -67,7 +67,7 @@ async function inicializar() {
     personalizarNombre();
 }
 
-// ── Personalizar mensaje con el primer nombre del usuario ─────────────────
+// Personalizar mensaje con el primer nombre del usuario
 async function personalizarNombre() {
     if (!EMAIL) return;
     try {
@@ -82,7 +82,7 @@ async function personalizarNombre() {
     } catch (_) { /* sin personalización si falla */ }
 }
 
-// ── Confirmar bloqueo ──────────────────────────────────────────────────────
+// Confirmar bloqueo
 async function bloquearCuenta() {
 
     const btn = document.getElementById('btn-bloquear-ahora');

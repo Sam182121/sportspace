@@ -1,6 +1,6 @@
 'use strict';
 
-/* ── AUTH ──────────────────────────────────────────────────── */
+/*  AUTH  */
 function requirePropietario() {
     const token = getToken();
     const user  = getUser();
@@ -9,7 +9,7 @@ function requirePropietario() {
     return true;
 }
 
-/* ── SIDEBAR LOADER ────────────────────────────────────────── */
+/*  SIDEBAR LOADER  */
 async function loadSidebar() {
     const container = document.getElementById('sidebar-container');
     if (!container) return;
@@ -48,7 +48,7 @@ function initHamburger() {
     if (btn && sb) btn.addEventListener('click', () => sb.classList.toggle('mobile-open'));
 }
 
-/* ── HEADER USER ───────────────────────────────────────────── */
+/*  HEADER USER  */
 function fillHeaderUser() {
     const user = getUser();
     if (!user) return;
@@ -70,7 +70,7 @@ function initHeaderDropdown() {
     document.addEventListener('click', () => wrap.classList.remove('open'));
 }
 
-/* ── FORMATO ───────────────────────────────────────────────── */
+/*  FORMATO  */
 function fmt(str) {
     if (!str) return '—';
     try {
@@ -130,7 +130,7 @@ function emptyRow(cols, msg = 'Sin registros') {
 
 function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val ?? '—'; }
 
-/* ── INIT PAGE ─────────────────────────────────────────────── */
+/*  INIT PAGE  */
 async function initPage(pageTitle) {
     if (!requirePropietario()) return;
     await loadSidebar();
@@ -144,9 +144,7 @@ async function initPage(pageTitle) {
     setInterval(() => { cargarNotificaciones(); actualizarBadgesReservas(); }, 20000);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   NOTIFICACIONES (campanita) — nueva reserva / cancelada por cliente
-   ══════════════════════════════════════════════════════════════ */
+/*  NOTIFICACIONES (campanita) — nueva reserva / cancelada por cliente  */
 function iconoNotif(tipo) {
     if (tipo === 'RESERVA_CANCELADA_CLIENTE') {
         return `<span style="display:inline-flex;width:32px;height:32px;border-radius:50%;background:#fef2f2;
@@ -168,7 +166,7 @@ function tiempoRelativo(fechaISO) {
     return `hace ${Math.floor(seg/86400)} d`;
 }
 
-/* ── Notificaciones nativas del navegador ──────────────────── */
+/* Notificaciones nativas del navegador  */
 function pedirPermisoNotificaciones() {
     if (!('Notification' in window)) return;
     if (Notification.permission === 'default') {
@@ -300,9 +298,7 @@ async function clickNotificacion(id, reservaId) {
     else cargarNotificaciones();
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BADGES junto a "Reservas" en el sidebar
-   ══════════════════════════════════════════════════════════════ */
+/* BADGES junto a "Reservas" en el sidebar */
 async function actualizarBadgesReservas() {
     const cont = document.getElementById('badge-reservas');
     if (!cont) return;

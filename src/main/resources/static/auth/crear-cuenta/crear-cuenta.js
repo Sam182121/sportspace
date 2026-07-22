@@ -2,14 +2,14 @@
 
 const API = '/api';
 
-// ── Estado global ────────────────────────────────────────────────────────────
+// Estado global
 let tipoDocumento    = 'DNI';   // "DNI" | "CE"
 let numeroConsultado = '';
 let emailVerificado  = false;
 let emailEnVerificacion = false;
 let telefonoValido   = false;   // false si el número ya está registrado
 
-// ── Alertas principales ──────────────────────────────────────────────────────
+// Alertas principales
 const alertIcons = {
     error:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
     success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
@@ -20,7 +20,7 @@ function setAlert(msg, type = 'error') {
         : '';
 }
 
-// ── Hints de campo ───────────────────────────────────────────────────────────
+// Hints de campo
 const hintIcons = {
     error:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
     success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
@@ -35,7 +35,7 @@ function setHint(id, msg, type = '') {
 }
 function limpiarHint(id) { setHint(id, ''); }
 
-// ── HTTP helpers ─────────────────────────────────────────────────────────────
+// HTTP helpers
 async function apiGet(url) {
     const res  = await fetch(API + url, { headers: { 'Accept': 'application/json' } });
     const data = await res.json().catch(() => ({}));
@@ -53,9 +53,8 @@ async function apiPost(url, body) {
     return data;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+
 // TIPO DE DOCUMENTO
-// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * Cambia entre DNI y C.E.
@@ -63,7 +62,7 @@ async function apiPost(url, body) {
  * de correo, códigos y todos los datos previamente consultados.
  */
 function seleccionarTipoDoc(tipo) {
-    if (tipoDocumento === tipo) return;   // ya está en ese modo, nada que hacer
+    if (tipoDocumento === tipo) return;
     tipoDocumento = tipo;
 
     const input  = document.getElementById('reg-dni');
@@ -72,10 +71,10 @@ function seleccionarTipoDoc(tipo) {
     const btnDni = document.getElementById('btn-tipo-dni');
     const btnCe  = document.getElementById('btn-tipo-ce');
 
-    // ── Limpiar TODO el formulario ──────────────────────────────────────────
+    // Limpiar TODO el formulario
     resetFormularioCompleto();
 
-    // ── Ajustar campo de documento según tipo ───────────────────────────────
+    // Ajustar campo de documento según tipo
     if (tipo === 'DNI') {
         label.textContent   = 'Número de DNI';
         badge.textContent   = 'Autocompletado RENIEC';
@@ -119,7 +118,7 @@ function resetFormularioCompleto() {
     emailEnVerificacion = false;
     telefonoValido      = false;
 
-    // ── Campo documento ─────────────────────────────────────────────────────
+    // Campo documento
     const docInput = document.getElementById('reg-dni');
     docInput.value     = '';
     docInput.readOnly  = false;
@@ -129,7 +128,7 @@ function resetFormularioCompleto() {
     if (lapiz) lapiz.style.display = 'none';
     document.getElementById('dni-info').classList.remove('show');
 
-    // ── Datos personales ────────────────────────────────────────────────────
+    // Datos personales
     ['reg-nombres', 'reg-apellidos', 'reg-fecha-nac',
         'reg-departamento', 'reg-provincia', 'reg-distrito', 'reg-direccion']
         .forEach(id => {
@@ -158,10 +157,10 @@ function resetFormularioCompleto() {
     const dir = document.getElementById('reg-direccion');
     if (dir) { dir.readOnly = true; dir.classList.add('field-locked'); dir.placeholder = ''; }
 
-    // ── Nacionalidad: vuelve a input bloqueado vacío (SIEMPRE VISIBLE) ──────
+    // Nacionalidad: vuelve a input bloqueado vacío (SIEMPRE VISIBLE)
     resetNacionalidad();
 
-    // ── Correo electrónico ──────────────────────────────────────────────────
+    // Correo electrónico
     const emailInput = document.getElementById('reg-email');
     emailInput.value     = '';
     emailInput.readOnly  = false;
@@ -206,10 +205,10 @@ function resetFormularioCompleto() {
 
     limpiarHint('hint-codigo-email');
 
-    // ── Alerta general ──────────────────────────────────────────────────────
+    // Alerta geneneral
     setAlert('');
 
-    // ── Contraseña ──────────────────────────────────────────────────────────
+    // Contraseña
     const pwdInput = document.getElementById('reg-password');
     if (pwdInput) {
         pwdInput.value = '';
@@ -220,7 +219,7 @@ function resetFormularioCompleto() {
     const pwdStrength = document.getElementById('pwd-strength');
     if (pwdStrength) pwdStrength.classList.remove('show');
 
-    // ── Teléfono ────────────────────────────────────────────────────────────
+    // Teléfono
     const telInput = document.getElementById('reg-telefono');
     if (telInput) {
         telInput.value = '';
@@ -228,14 +227,14 @@ function resetFormularioCompleto() {
     }
     limpiarHint('hint-telefono');
 
-    // ── Botón de registro — siempre deshabilitado al resetear ───────────────
+    // Botón de registro — siempre deshabilitado al resetear
     const btnReg = document.getElementById('btn-registro');
     btnReg.disabled = true;
     btnReg.classList.add('btn-disabled');
     btnReg.title = 'Verifica tu correo primero';
 }
 
-// ── Resetear solo la sección de nacionalidad ─────────────────────────────────
+// Resetear solo la sección de nacionalidad
 function resetNacionalidad() {
     const inputNac = document.getElementById('reg-nacionalidad');
     const selNac   = document.getElementById('sel-nacionalidad');
@@ -250,9 +249,7 @@ function resetNacionalidad() {
     if (selNac) { selNac.value = ''; selNac.style.display = 'none'; }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // CONSULTA DE DOCUMENTO
-// ═══════════════════════════════════════════════════════════════════════════════
 
 function onDocInput() {
     const val    = document.getElementById('reg-dni').value.trim();
@@ -390,20 +387,9 @@ async function consultarDocumento() {
 
 async function consultarReniec() { await consultarDocumento(); }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // NACIONALIDAD
-// ═══════════════════════════════════════════════════════════════════════════════
 
-/**
- * Aplica la lógica de nacionalidad según el tipo de documento y el valor devuelto por la API.
- *
- * Comportamiento:
- *  - El grupo #grupo-nacionalidad es SIEMPRE visible (desde el HTML tiene display por defecto).
- *  - DNI → input bloqueado con "PERUANA", select oculto.
- *  - C.E. + valor de la API → input bloqueado con ese valor, select oculto.
- *  - C.E. + sin valor de la API → select habilitado para elegir país, input oculto.
- *  - Sin consulta aún → input bloqueado vacío con placeholder informativo.
- */
+
 async function aplicarNacionalidad(valor) {
     const inputNac = document.getElementById('reg-nacionalidad');
     const selNac   = document.getElementById('sel-nacionalidad');
@@ -418,7 +404,7 @@ async function aplicarNacionalidad(valor) {
         selNac.style.display   = 'none';
 
     } else if (valor) {
-        // C.E. y la API devolvió la nacionalidad → bloqueado con ese valor
+        // C.E. y la API devuelve la nacionalidad → bloqueado con ese valor
         inputNac.value         = valor;
         inputNac.placeholder   = '';
         inputNac.style.display = '';
@@ -462,9 +448,7 @@ function onNacionalidadChange(valor) {
     document.getElementById('reg-nacionalidad').value = valor;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // EMAIL
-// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * Evalúa si todos los campos obligatorios están completos y habilita/deshabilita
@@ -663,9 +647,7 @@ async function verificarCodigoEmail() {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TELÉFONO  — validación básica, sin SMS por el momento
-// ═══════════════════════════════════════════════════════════════════════════════
+// TELÉFONO  — validación básica
 
 async function validarTelefonoBlur() {
     const tel = document.getElementById('reg-telefono').value.trim();
@@ -700,9 +682,7 @@ async function validarTelefonoBlur() {
     actualizarBotonRegistro();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // CONTRASEÑA
-// ═══════════════════════════════════════════════════════════════════════════════
 
 function togglePwd() {
     const input = document.getElementById('reg-password');
@@ -732,9 +712,7 @@ function calcularFuerza() {
     lbl.style.color  = n.bg; lbl.textContent = n.t;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // REGISTRO FINAL
-// ═══════════════════════════════════════════════════════════════════════════════
 
 document.getElementById('btn-registro').onclick = async () => {
     setAlert('');
@@ -797,9 +775,7 @@ document.getElementById('btn-registro').onclick = async () => {
     }
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // UBIGEO
-// ═══════════════════════════════════════════════════════════════════════════════
 
 function aplicarCampoReniec(inputId, pickerId, valor) {
     const input  = document.getElementById(inputId);
@@ -902,9 +878,7 @@ async function onProvinciaChange(provinciaId) {
     } catch (e) { console.error('Error cargando distritos:', e); }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // COUNTDOWN REENVÍO
-// ═══════════════════════════════════════════════════════════════════════════════
 
 function iniciarCountdownReenvio(btnId, segundos) {
     const btn = document.getElementById(btnId);
@@ -925,7 +899,7 @@ function iniciarCountdownReenvio(btnId, segundos) {
     }, 1000);
 }
 
-// ── Enter en campo de documento ──────────────────────────────────────────────
+// Enter en campo de documento
 document.getElementById('reg-dni').addEventListener('keydown', e => {
     if (e.key === 'Enter') consultarDocumento();
 });

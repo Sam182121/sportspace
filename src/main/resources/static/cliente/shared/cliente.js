@@ -2,7 +2,7 @@
 
 function requireCliente() { return requireAuth('CLIENTE'); }
 
-/* ── NAVBAR LOADER ─────────────────────────────────────────── */
+/* NAVBAR LOADER */
 async function loadNavbar() {
     const container = document.getElementById('navbar-container');
     if (!container) return;
@@ -52,7 +52,7 @@ function setNavBadgeReservas(n) {
     b.style.display = n > 0 ? 'inline-flex' : 'none';
 }
 
-/* ── INIT PAGE ─────────────────────────────────────────────── */
+/* INIT PAGE  */
 async function initPage() {
     if (!requireCliente()) return false;
     await loadNavbar();
@@ -62,9 +62,9 @@ async function initPage() {
     return true;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/*
    NOTIFICACIONES (campanita) — aprobada / rechazada / cancelada
-   ══════════════════════════════════════════════════════════════ */
+*/
 function pedirPermisoNotificacionesCliente() {
     if (!('Notification' in window)) return;
     if (Notification.permission === 'default') Notification.requestPermission();
@@ -211,7 +211,7 @@ async function clickNotifCliente(id) {
     window.location.href = '/cliente/reservas';
 }
 
-/* ── FORMATO ───────────────────────────────────────────────────
+/* FORMATO
    formatDate() y formatCurrency() ya existen en api.js — se usan tal cual.
    Aquí solo se agrega lo que falta para el flujo de cliente. ───────── */
 function fmtFechaLarga(str) {
@@ -234,7 +234,6 @@ function fmtHora(val) {
 }
 
 function badgeEstadoReserva(e) {
-    // Mismas clases de shared.css usadas por admin/propietario (badge-pending, badge-success, badge-inactive, badge-danger)
     const map = {
         PENDIENTE:  ['pending',  '⏳ Pendiente de pago'],
         CONFIRMADA: ['success',  '✓ Confirmada'],
@@ -265,10 +264,7 @@ function rangosSeSuperponen(aIni, aFin, bIni, bFin) {
     return aIni < bFin && bIni < aFin;
 }
 
-/* ── ICONO / TEMA / ETIQUETA POR DEPORTE ──────────────────────
-   El campo "deporte" en la base de datos es uno de estos 5 valores fijos
-   (definidos en el formulario de creación de canchas del propietario):
-   FUTBOL, BASQUETBOL, VOLEIBOL, TENIS, PADEL ─────────────────── */
+/* ── ICONO / TEMA / ETIQUETA POR DEPORTE */
 const DEPORTE_MAP = {
     FUTBOL:     { emoji: '⚽',  theme: 'theme-f7',   label: 'Fútbol'  },
     BASQUETBOL: { emoji: '🏀',  theme: 'theme-bask', label: 'Básquet' },
@@ -281,7 +277,7 @@ function iconoDeporte(deporte) {
 }
 function labelDeporte(deporte) { return iconoDeporte(deporte).label; }
 
-/* ── UI HELPERS ────────────────────────────────────────────── */
+/* UI HELPERS */
 function loadingGrid(msg = 'Cargando canchas...') {
     return `<div class="loading-state" style="grid-column:1/-1"><div class="spinner"></div> ${msg}</div>`;
 }

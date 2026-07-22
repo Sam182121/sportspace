@@ -3,7 +3,7 @@
 const AVATAR_COLORS = ['av-blue', 'av-green', 'av-orange', 'av-purple'];
 function colorAvatar(id) { return AVATAR_COLORS[(id || 0) % AVATAR_COLORS.length]; }
 
-/* ── datos en memoria para el filtrado local ── */
+/* datos en memoria para el filtrado local */
 let _todosIntentos  = [];
 let _todasSesiones  = [];
 
@@ -54,7 +54,7 @@ function mostrarAlerta(cantidad) {
     </div>`;
 }
 
-/* ── INTENTOS FALLIDOS ── */
+/*  INTENTOS FALLIDOS */
 async function cargarIntentos() {
     const tbody = document.getElementById('tablaIntentos');
     tbody.innerHTML = loadingRow(6);
@@ -141,7 +141,7 @@ function filtrarIntentos() {
     renderIntentos(filtrados);
 }
 
-/* ── SESIONES ACTIVAS ── */
+/* SESIONES ACTIVAS */
 async function cargarSesiones() {
     const tbody = document.getElementById('tablaSesiones');
     tbody.innerHTML = loadingRow(5);
@@ -217,7 +217,7 @@ function filtrarSesiones() {
     renderSesiones(filtradas);
 }
 
-/* ── ACCIONES INTENTOS ── */
+/* ACCIONES INTENTOS */
 function bloquearIP(ip, correo) {
     confirmar(
         `¿Bloquear la IP ${ip}? No podra acceder al sistema.`,
@@ -263,7 +263,7 @@ function ignorarIntento(id) {
     );
 }
 
-/* ── ACCIONES SESIONES ── */
+/*  ACCIONES SESIONES  */
 function cerrarSesion(sessionId, nombre) {
     confirmar(
         `¿Cerrar la sesion de "${nombre}"? El usuario sera desconectado inmediatamente.`,

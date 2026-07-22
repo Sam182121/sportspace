@@ -12,13 +12,13 @@ import java.util.Optional;
 
 public interface PagoRepository extends JpaRepository<Pago, Long> {
 
-    // ── Búsquedas básicas ─────────────────────────────────────────────────────
+    // Busquedas básicas
 
     Optional<Pago> findByReservaId(Long reservaId);
 
     boolean existsByReservaId(Long reservaId);
 
-    // ── Borrado en cascada (eliminación forzada de usuario) ──
+    // Borrado en cascada (eliminación forzada de usuario)
     @org.springframework.data.jpa.repository.Modifying
     @Query("DELETE FROM Pago p WHERE p.reserva.cliente.id = :clienteId")
     void deleteByReservaClienteId(@Param("clienteId") Long clienteId);
@@ -27,7 +27,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     @Query("DELETE FROM Pago p WHERE p.reserva.cancha.propietario.id = :propietarioId")
     void deleteByReservaCanchaPropietarioId(@Param("propietarioId") Long propietarioId);
 
-    // ── Dashboard admin ───────────────────────────────────────────────────────
+    // Dashboard admin
 
     @Query("""
         SELECT p FROM Pago p
@@ -48,7 +48,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     """)
     List<Pago> findAllOrderByFechaPagoDesc();
 
-    // ── Ingresos ──────────────────────────────────────────────────────────────
+    // Ingresos
 
     /**
      * Suma ingresos reales en un período.
@@ -82,7 +82,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     """)
     List<Pago> findCompletadosDesde(@Param("desde") LocalDateTime desde);
 
-    // ── Por propietario ───────────────────────────────────────────────────────
+    // Por propietario
 
     @Query("""
         SELECT p FROM Pago p
@@ -109,7 +109,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     BigDecimal sumIngresosCompletadosByPropietario(
             @Param("propietarioId") Long propietarioId);
 
-    // ── Por cliente ───────────────────────────────────────────────────────────
+    // Por cliente
 
     @Query("""
         SELECT p FROM Pago p

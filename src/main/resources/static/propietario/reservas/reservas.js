@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btnConfirmCancelarConfirmada').addEventListener('click', confirmarCancelarConfirmada);
 });
 
-/* ── CARGAR FILTRO CANCHAS ──────────────────────────────────── */
+/* CARGAR FILTRO CANCHAS */
 async function cargarCanchasFilter() {
     try {
         const list = await api.get('/propietario/canchas');
@@ -23,7 +23,7 @@ async function cargarCanchasFilter() {
     } catch { /* ignora */ }
 }
 
-/* ── CARGAR RESERVAS ────────────────────────────────────────── */
+/*  CARGAR RESERVAS  */
 async function cargarReservas() {
     const container = document.getElementById('reservasContainer');
     container.innerHTML = '<div class="loading-state"><div class="spinner"></div> Cargando...</div>';
@@ -46,7 +46,7 @@ function actualizarBadge() {
     bdg.style.display = n > 0 ? 'inline-flex' : 'none';
 }
 
-/* ── FILTRAR ────────────────────────────────────────────────── */
+/* FILTRAR */
 function filtrar() { renderReservas(); }
 
 function getReservasFiltradas() {
@@ -68,7 +68,7 @@ function getReservasFiltradas() {
     });
 }
 
-/* ── RENDER ─────────────────────────────────────────────────── */
+/* RENDER */
 function renderReservas() {
     const container = document.getElementById('reservasContainer');
     const lista = getReservasFiltradas(); // ya viene ordenada del backend, no se reordena aquí
@@ -147,7 +147,7 @@ function fmtHora(val) {
     return String(val).substring(0, 5);
 }
 
-/* ── LIGHTBOX (ver imagen sin salir de la página) ─────────────── */
+/*  LIGHTBOX ver imagen */
 function verImagenZoom(url) {
     if (!url) return;
     let lb = document.getElementById('imgZoomOverlay');
@@ -165,7 +165,7 @@ function verImagenZoom(url) {
     lb.style.display = 'flex';
 }
 
-/* ── DETALLE (+ acción de reembolso) ──────────────────────────── */
+/* DETALLE (+ acción de reembolso) */
 let _reembolsoVoucherB64 = null;
 let _reembolsoPagoIdActual = null;
 
@@ -319,7 +319,7 @@ async function procesarReembolsoDesdeReserva() {
     }
 }
 
-/* ── APROBAR ────────────────────────────────────────────────── */
+/*  APROBAR  */
 async function aprobar(id) {
     try {
         await api.patch(`/propietario/reservas/${id}/aprobar`, {});
@@ -328,10 +328,7 @@ async function aprobar(id) {
     } catch (e) { toast(e.message || 'Error al aprobar', 'error'); }
 }
 
-/* ── RECHAZAR (reserva PENDIENTE) ──────────────────────────────
-   El checkbox "Sí recibí este pago..." se autoajusta según el motivo
-   elegido (ver data-reembolsar en cada <option> del HTML), pero el
-   propietario siempre puede cambiarlo manualmente antes de confirmar. */
+/*  RECHAZAR (reserva PENDIENTE) */
 function abrirRechazar(id) {
     reservaAccion = id;
     const motivo = document.getElementById('motivoRechazo');

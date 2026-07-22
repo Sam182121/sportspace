@@ -22,7 +22,7 @@ public class AdminSeguridadController {
 
     private final SeguridadService seguridadService;
 
-    // ── STATS ───────────────────────────────────────────────────────
+    // STATS
 
     /** GET /api/admin/seguridad/stats */
     @GetMapping("/stats")
@@ -30,7 +30,7 @@ public class AdminSeguridadController {
         return ResponseEntity.ok(seguridadService.getStats());
     }
 
-    // ── INTENTOS FALLIDOS ───────────────────────────────────────────
+    // INTENTOS FALLIDOS
 
     /** GET /api/admin/seguridad/intentos-fallidos */
     @GetMapping("/intentos-fallidos")
@@ -46,7 +46,7 @@ public class AdminSeguridadController {
         return ResponseEntity.ok(Map.of("mensaje", "Registro eliminado correctamente"));
     }
 
-    // ── BLOQUEO DE IPs ──────────────────────────────────────────────
+    // BLOQUEO POR IP
 
     /** POST /api/admin/seguridad/bloquear-ip */
     @PostMapping("/bloquear-ip")
@@ -74,7 +74,7 @@ public class AdminSeguridadController {
         return ResponseEntity.ok(Map.of("mensaje", "IP desbloqueada correctamente"));
     }
 
-    // ── SESIONES ACTIVAS ────────────────────────────────────────────
+    // SESIONES ACTIVAS
 
     /** GET /api/admin/seguridad/sesiones-activas */
     @GetMapping("/sesiones-activas")
@@ -106,7 +106,7 @@ public class AdminSeguridadController {
         return ResponseEntity.ok(Map.of("mensaje", "Todas las sesiones cerradas"));
     }
 
-    // ── UTILIDAD ────────────────────────────────────────────────────
+    // UTILIDAD
 
     private String extraerToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");

@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class PagoResponse {
 
-    // ── Pago ────────────────────────────────────────────────────────────────
+    // Pago
     private Long              id;
     private BigDecimal        monto;
     private Pago.MetodoPago   metodo;
@@ -28,20 +28,20 @@ public class PagoResponse {
     /** Comprobante de la devolución subido por el propietario (solo si fue reembolsado). */
     private String            voucherReembolsoUrl;
 
-    // ── Reserva asociada ────────────────────────────────────────────────────
+    // Reserva asociada
     private Long              reservaId;
     private String            reservaEstado;
     private LocalDate         reservaFecha;
     private LocalTime         reservaHoraInicio;
     private LocalTime         reservaHoraFin;
 
-    // ── Cancha ───────────────────────────────────────────────────────────────
+    // Cancha
     private Long              canchaId;
     private String            canchaNombre;
     private String            canchaDeporte;
     private String            canchaDistrito;
 
-    // ── Cliente ───────────────────────────────────────────────────────────────
+    // Cliente
     private Long              clienteId;
     private String            clienteNombre;
     private String            clienteEmail;

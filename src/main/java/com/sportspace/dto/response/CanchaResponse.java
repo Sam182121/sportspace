@@ -26,7 +26,7 @@ public class CanchaResponse {
     private Integer     totalReservas;
     private LocalDateTime createdAt;
 
-    // ── FOTOS ── (estaba ausente, por eso no aparecían en el admin)
+    // FOTOS
     private List<String> fotos;
 
     // Datos del propietario

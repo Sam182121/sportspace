@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 /**
- * Configuración de métodos de pago por propietario.
  * Cada propietario puede tener hasta 1 registro por tipo:
  *   TRANSFERENCIA, YAPE, PLIN
  *
@@ -42,7 +41,7 @@ public class MetodoPagoPropietario {
     @Builder.Default
     private Boolean activo = true;
 
-    /* ── Campos TRANSFERENCIA ── */
+    /* Campos TRANSFERENCIA */
     @Column(length = 80)
     private String banco;
 
@@ -55,7 +54,7 @@ public class MetodoPagoPropietario {
     @Column(name = "titular_cuenta", length = 100)
     private String titularCuenta;
 
-    /* ── Campos YAPE / PLIN ── */
+    /* Campos YAPE / PLIN  */
     @Column(name = "numero_telefono", length = 15)
     private String numeroTelefono;
 

@@ -1,5 +1,5 @@
 'use strict';
-/* ── DASHBOARD CLIENTE ──────────────────────────────────────── */
+/* DASHBOARD CLIENTE */
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!await initPage()) return;
@@ -20,7 +20,7 @@ function timestampReserva(r) {
     catch { return 0; }
 }
 
-/* ── STATS PERSONALES ───────────────────────────────────────── */
+/* STATS PERSONALES  */
 async function loadStats() {
     try {
         const reservas = await api.get('/reservas/mis-reservas');
@@ -86,7 +86,7 @@ function renderProximas(list) {
     }).join('');
 }
 
-/* ── CANCHAS SUGERIDAS ──────────────────────────────────────── */
+/* CANCHAS SUGERIDAS */
 async function loadSugeridas() {
     const grid = document.getElementById('sugeridosGrid');
     try {
@@ -106,7 +106,7 @@ async function loadSugeridas() {
     }
 }
 
-/* ── CARD DE CANCHA (sin emoji superpuesto, sin favoritos) ──── */
+/* CARD DE CANCHA */
 const PLACEHOLDER_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:34px;height:34px;color:rgba(0,0,0,.25)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`;
 
 function renderCanchaCard(c) {
@@ -133,7 +133,7 @@ function renderCanchaCard(c) {
     </div>`;
 }
 
-/* ── MODAL reserva ──────────────────────────────────────────── */
+/* MODAL reserva */
 let modalReservaReady = false;
 async function abrirModal(canchaId) {
     if (!modalReservaReady) {

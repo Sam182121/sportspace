@@ -126,7 +126,7 @@ document.getElementById('btn-resetear').addEventListener('click', async () => {
                 document.getElementById('ok-nombre-msg').textContent =
                     `${primerNombre}, tu contraseña fue actualizada correctamente.`;
             }
-            // Mostrar vista de éxito — SIN mensaje de bloqueo ni botón de bloquear.
+            // Mostrar vista de éxito
             // El correo de seguridad ya fue enviado automáticamente por el backend.
             mostrar('view-ok');
         } else {

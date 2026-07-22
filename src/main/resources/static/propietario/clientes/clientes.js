@@ -78,7 +78,7 @@ function filtrarClientes(q) {
     if (tbody) tbody.innerHTML = renderTablaClientes(lista);
 }
 
-/* ── MODAL DETALLE CLIENTE ──────────────────────────────────── */
+/*  MODAL DETALLE CLIENTE */
 function verDetalleCliente(idx) {
     const c = todosClientes[idx];
     if (!c) return;

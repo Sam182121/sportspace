@@ -1,7 +1,5 @@
 package com.sportspace.security;
 
-import com.sportspace.entity.Usuario;
-import com.sportspace.repository.UsuarioRepository;
 import com.sportspace.service.SeguridadService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +24,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil                jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final SeguridadService       seguridadService;
-    private final UsuarioRepository      usuarioRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -44,8 +41,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         if (!jwtUtil.isTokenValid(token)) {
-            // Token expirado → limpiar del mapa de sesiones
+            // Token expirado o inválido → limpiar su sesión persistida, si existe
             seguridadService.removerSesionPorToken(token);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // La sesión debe seguir registrada
+        if (!seguridadService.isSesionRegistrada(token)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -61,41 +64,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            // ── Re-registrar sesión si no está en el mapa (ej. reinicio del servidor) ──
-            if (!seguridadService.isSesionRegistrada(token)) {
-                try {
-                    usuarioRepository.findByEmail(email).ifPresent(usuario -> {
-                        String ip = obtenerIp(request);
-                        seguridadService.registrarSesion(
-                                token,
-                                usuario.getId(),
-                                usuario.getNombres(),
-                                usuario.getApellidos(),
-                                usuario.getEmail(),
-                                usuario.getRol().name(),
-                                ip
-                        );
-                    });
-                } catch (Exception e) {
-                    log.warn("No se pudo re-registrar sesión para {}: {}", email, e.getMessage());
-                }
-            }
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String obtenerIp(HttpServletRequest request) {
-        String forwarded = request.getHeader("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            return forwarded.split(",")[0].trim();
-        }
-        String ip = request.getRemoteAddr();
-        // IPv6 localhost → normalizar a 127.0.0.1
-        if ("0:0:0:0:0:0:0:1".equals(ip) || "::1".equals(ip)) {
-            return "127.0.0.1";
-        }
-        return ip;
     }
 }

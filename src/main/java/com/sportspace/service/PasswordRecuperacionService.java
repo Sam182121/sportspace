@@ -33,7 +33,7 @@ public class PasswordRecuperacionService {
     @Value("${app.frontend.url:http://localhost:8080}")
     private String frontendUrl;
 
-    // ── PASO 1: SOLICITAR ENLACE DE RECUPERACIÓN ──────────────────────────────
+    // PASO 1: SOLICITAR ENLACE DE RECUPERACIÓN
 
     @Transactional
     public void solicitarRecuperacion(RecuperarPasswordRequest request) {
@@ -76,7 +76,7 @@ public class PasswordRecuperacionService {
         // Si el email no existe, no hacemos nada — respuesta genérica en el controller
     }
 
-    // ── PASO 2: VALIDAR TOKEN DE RECUPERACIÓN ────────────────────────────────
+    // PASO 2: VALIDAR TOKEN DE RECUPERACIÓN
 
     public void validarToken(String token) {
         TokenRecuperacion registro = tokenRepo.findByToken(token)
@@ -94,7 +94,7 @@ public class PasswordRecuperacionService {
         }
     }
 
-    // ── PASO 2B: VALIDAR TOKEN DE BLOQUEO (al cargar /bloquear-cuenta) ────────
+    // ── PASO 2B: VALIDAR TOKEN DE BLOQUEO (al cargar /bloquear-cuenta)
     // El frontend llama este endpoint al cargar la página para detectar tokens
     // ya usados o expirados ANTES de mostrar el formulario de bloqueo.
 
@@ -114,7 +114,7 @@ public class PasswordRecuperacionService {
         }
     }
 
-    // ── PASO 3: RESTABLECER CONTRASEÑA ────────────────────────────────────────
+    // PASO 3: RESTABLECER CONTRASEÑA
 
     @Transactional
     public Map<String, String> resetearPassword(ResetPasswordRequest request) {
@@ -170,7 +170,7 @@ public class PasswordRecuperacionService {
         );
     }
 
-    // ── BLOQUEAR CUENTA ───────────────────────────────────────────────────────
+    // BLOQUEAR CUENTA
 
     @Transactional
     public Map<String, String> bloquearCuenta(String tokenBloqueo) {

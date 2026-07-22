@@ -1,5 +1,5 @@
 'use strict';
-/* ── MODAL RESERVA v2 ───────────────────────────────────────── */
+/* MODAL RESERVA v2 */
 
 let _cancha       = null;
 let _slotSel      = null;          // { inicio:'HH:mm', fin:'HH:mm' }
@@ -10,7 +10,7 @@ let _voucherBase64= null;          // comprobante en base64
 let _carIndex     = 0;             // foto actual del carrusel
 let _fotos        = [];
 
-/* ═══════════════════════ ABRIR ══════════════════════════════ */
+/*  ABRIR  */
 async function abrirModalReserva(canchaId, canchaCache) {
     _cancha = null; _slotSel = null; _fechaSel = null;
     _voucherBase64 = null; _carIndex = 0;
@@ -29,7 +29,7 @@ async function abrirModalReserva(canchaId, canchaCache) {
     }
 }
 
-/* ═══════════════════════ CARRUSEL DE FOTOS ═════════════════ */
+/* CARRUSEL DE FOTOS  */
 function renderCarrusel() {
     _fotos = (_cancha.fotos && _cancha.fotos.length) ? _cancha.fotos : [];
     const track = document.getElementById('mCarouselTrack');
@@ -84,7 +84,7 @@ function cerrarZoom(e) {
     document.getElementById('lightboxOverlay').classList.remove('open');
 }
 
-/* ═══════════════════════ POBLAR INFO ═══════════════════════ */
+/* POBLAR INFO  */
 function poblarInfo() {
     const c = _cancha;
     const { emoji, label } = iconoDeporte(c.deporte || '');
@@ -120,7 +120,7 @@ function poblarInfo() {
     document.getElementById('prTotal').textContent  = `S/. ${Number(c.precioPorHora||0).toFixed(2)}`;
 }
 
-/* ═══════════════════════ PASOS ════════════════════════════ */
+/* PASOS */
 const PASOS = ['info', 'horario', 'pago', 'listo'];
 
 function mGoTo(paso, animar = true) {
@@ -145,7 +145,7 @@ function actualizarSteps(activo) {
     });
 }
 
-/* ═══════════════════════ CALENDARIO MENSUAL ════════════════ */
+/* CALENDARIO MENSUAL */
 const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function calCambiarMes(delta) {
@@ -201,7 +201,7 @@ function calSeleccionarFecha(fechaStr, btn) {
     cargarDisponibilidad();
 }
 
-/* ═══════════════════════ DISPONIBILIDAD (tipo cine) ════════ */
+/* DISPONIBILIDAD (tipo cine) */
 async function cargarDisponibilidad() {
     if (!_fechaSel || !_cancha) return;
     const wrap = document.getElementById('mHorasWrap');
@@ -254,7 +254,7 @@ function selSlot(btn, ini, fin) {
     document.getElementById('prTotal').textContent = `S/. ${Number(_cancha.precioPorHora||0).toFixed(2)}`;
 }
 
-/* ═══════════════════════ PASO PAGO ═══════════════════════ */
+/*  PASO PAGO  */
 async function prepararPago() {
     const sel = document.getElementById('selMetodoPago');
     sel.innerHTML = `<option value="">Cargando métodos…</option>`;
@@ -320,7 +320,7 @@ function onMetodoPagoChange() {
     actualizarBtnConfirmar();
 }
 
-/* ── VOUCHER: se SUBE al servidor (disco), no se guarda base64 ─── */
+/*  VOUCHER: se SUBE al servidor (disco) */
 function handleVoucherFile(e) {
     const f = e.target.files[0];
     if (f) leerVoucher(f);
@@ -379,7 +379,7 @@ function actualizarBtnConfirmar() {
     document.getElementById('mBtnConfirmar').disabled = !ok;
 }
 
-/* ═══════════════════════ CONFIRMAR ════════════════════════ */
+/* CONFIRMAR */
 async function confirmarReserva() {
     if (!_cancha || !_slotSel || !_fechaSel) return;
     const metodo = document.getElementById('selMetodoPago').value;

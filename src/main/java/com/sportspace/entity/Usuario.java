@@ -116,7 +116,7 @@ public class Usuario {
     private Boolean bloqueadoPorSeguridad = false;
 
     /**
-     * CAMPO NUEVO — fecha y hora exacta en que el usuario bloqueó su cuenta.
+     * fecha y hora exacta en que el usuario bloqueó su cuenta.
      * Null si nunca fue bloqueada por seguridad.
      */
     @Column(name = "fecha_bloqueo_seguridad")

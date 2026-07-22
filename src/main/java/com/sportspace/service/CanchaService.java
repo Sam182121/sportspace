@@ -29,7 +29,7 @@ public class CanchaService {
     private final HorarioSlotRepository horarioSlotRepository;
     private final FechaBloqueadaRepository fechaBloqueadaRepository;
 
-    // ── PÚBLICO ───────────────────────────────────────────────────────────────
+    // PUBLICO
 
     public List<CanchaResponse> listarActivas() {
         return canchaRepository.findByActivaTrue()
@@ -56,7 +56,7 @@ public class CanchaService {
                 .toList();
     }
 
-    // ── PROPIETARIO ───────────────────────────────────────────────────────────
+    // PROPIETARIO
 
     @Transactional
     public CanchaResponse crear(CanchaRequest request) {
@@ -107,7 +107,7 @@ public class CanchaService {
                 .toList();
     }
 
-    // ── ADMIN ─────────────────────────────────────────────────────────────────
+    // ADMIN
 
     public List<CanchaResponse> listarTodas() {
         return canchaRepository.findAll()
@@ -166,7 +166,7 @@ public class CanchaService {
         }
     }
 
-    // ── HELPERS PRIVADOS ──────────────────────────────────────────────────────
+    // HELPERS PRIVADO
 
     private Cancha buscarPorId(Long id) {
         return canchaRepository.findById(id)
@@ -196,7 +196,7 @@ public class CanchaService {
         }
     }
 
-    // ── toResponse: ahora incluye fotos ───────────────────────────────────────
+    // toResponse: incluye fotos
     public CanchaResponse toResponse(Cancha c) {
         return CanchaResponse.builder()
                 .id(c.getId())
@@ -213,9 +213,9 @@ public class CanchaService {
                 .activa(c.getActiva())
                 .totalReservas(c.getTotalReservas())
                 .createdAt(c.getCreatedAt())
-                // ─── FOTOS: mapear la lista completa ───────────────────────
+                //  FOTOS: mapear la lista completa
                 .fotos(c.getFotos() != null ? c.getFotos() : java.util.List.of())
-                // ──────────────────────────────────────────────────────────
+                //
                 .propietarioId(c.getPropietario().getId())
                 .propietarioNombre(c.getPropietario().getNombres()
                         + " " + c.getPropietario().getApellidos())

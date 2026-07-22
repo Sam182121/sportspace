@@ -84,7 +84,7 @@ public class PropietarioClienteController {
                         (int) b.get("totalReservas"), (int) a.get("totalReservas")))
                 .toList();
 
-        // Estadísticas globales
+        // Estadisticas globales
         long frecuentes = clientes.stream().filter(c -> (int) c.get("totalReservas") >= 10).count();
         long nuevos     = porCliente.entrySet().stream()
                 .filter(e -> e.getValue().stream().anyMatch(r -> r.getFecha() != null && !r.getFecha().isBefore(inicioMes)))

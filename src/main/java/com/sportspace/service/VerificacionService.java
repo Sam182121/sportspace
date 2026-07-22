@@ -42,7 +42,7 @@ public class VerificacionService {
         log.info("Código EMAIL enviado al usuario id={}", usuario.getId());
     }
 
-    // ── VERIFICAR CÓDIGO DE EMAIL ─────────────────────────────────────────────
+    //  VERIFICAR CÓDIGO DE EMAIL
 
     @Transactional
     public void verificarEmail(String email, String codigoIngresado) {
@@ -60,7 +60,7 @@ public class VerificacionService {
         log.info("Email verificado para usuario id={}", usuario.getId());
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────────
+    // HELPERS
 
     private String generarCodigo() {
         return String.valueOf(random.nextInt(900000) + 100000);

@@ -25,7 +25,7 @@ public class PropietarioHorarioController {
     private final FechaBloqueadaRepository fechaRepo;
     private final UsuarioRepository        usuarioRepo;
 
-    // ── GET /{canchaId} ──────────────────────────────────────────
+    // GET /{canchaId}
     @GetMapping("/{canchaId}")
     public ResponseEntity<Map<String, Object>> getHorario(
             @PathVariable Long canchaId,
@@ -87,13 +87,13 @@ public class PropietarioHorarioController {
                 "cantidad",  nuevos.size()));
     }
 
-    // ── GET /{canchaId}/fechas-bloqueadas ────────────────────────
+    // GET /{canchaId}/fechas-bloqueadas
     @GetMapping("/{canchaId}/fechas-bloqueadas")
     public ResponseEntity<List<Map<String, Object>>> getFechasBloqueadas(
             @PathVariable Long canchaId,
             @AuthenticationPrincipal UserDetails ud) {
         validarPropietario(canchaId, ud);
-        // Usar el método real del repositorio
+        // repositorio
         List<Map<String, Object>> result = fechaRepo
                 .findByCanchaIdOrderByFechaAsc(canchaId)
                 .stream()
@@ -108,7 +108,7 @@ public class PropietarioHorarioController {
         return ResponseEntity.ok(result);
     }
 
-    // ── POST /{canchaId}/fechas-bloqueadas ───────────────────────
+    // POST /{canchaId}/fechas-bloqueadas
     @PostMapping("/{canchaId}/fechas-bloqueadas")
     public ResponseEntity<Map<String, Object>> bloquearFecha(
             @PathVariable Long canchaId,
@@ -144,8 +144,8 @@ public class PropietarioHorarioController {
         return ResponseEntity.ok(Map.of("mensaje", "Fecha bloqueada correctamente"));
     }
 
-    // ── DELETE /{canchaId}/fechas-bloqueadas/{id} ─────────────────
-    // Se elimina por ID del registro, no por fecha (más seguro y simple)
+    // DELETE /{canchaId}/fechas-bloqueadas/{id}
+    // Se elimina por ID del registro, no por fecha
     @DeleteMapping("/{canchaId}/fechas-bloqueadas/{fechaId}")
     public ResponseEntity<Map<String, Object>> desbloquearFecha(
             @PathVariable Long canchaId,
@@ -169,7 +169,7 @@ public class PropietarioHorarioController {
         return ResponseEntity.ok(Map.of("mensaje", "Fecha desbloqueada correctamente"));
     }
 
-    // ── Helpers ──────────────────────────────────────────────────
+    // Helpers
     private Cancha validarPropietario(Long canchaId, UserDetails ud) {
         Cancha c = canchaRepo.findById(canchaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cancha no encontrada"));

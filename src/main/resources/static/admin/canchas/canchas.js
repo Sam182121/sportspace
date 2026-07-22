@@ -25,7 +25,7 @@ function estadoCancha(estado) {
     return `<span class="estado-cancha ${cls}">${labels[estado] ?? estado}</span>`;
 }
 
-/* ── CARGA ──────────────────────────────────────────────────── */
+/* CARGA */
 async function cargarCanchas() {
     const tbody = document.getElementById('tablaCanchas');
     tbody.innerHTML = loadingRow(7);
@@ -48,7 +48,7 @@ function calcularStats() {
     setText('statInactivas',  canchas.filter(c => c.estado === 'INACTIVA').length);
 }
 
-/* ── TABLA ──────────────────────────────────────────────────── */
+/* TABLA  */
 function renderTabla() {
     const tbody = document.getElementById('tablaCanchas');
     const total = canchasFiltradas.length;
@@ -160,7 +160,7 @@ function renderTabla() {
     });
 }
 
-/* ── FILTROS ────────────────────────────────────────────────── */
+/*  FILTROS */
 function filtrarCanchas() {
     const buscar  = document.getElementById('filtroBuscar').value.trim().toLowerCase();
     const deporte = document.getElementById('filtroDeporte').value;
@@ -186,7 +186,7 @@ function limpiarFiltros() {
     renderTabla();
 }
 
-/* ── VER DETALLE + FOTOS ────────────────────────────────────── */
+/* VER DETALLE + FOTOS */
 let _lbFotos = [], _lbActual = 0;
 
 async function verDetalle(id) {
@@ -283,7 +283,7 @@ async function verDetalle(id) {
     }
 }
 
-/* ── LIGHTBOX ───────────────────────────────────────────────── */
+/* LIGHTBOX */
 function abrirLightbox(url, idx, fotosJson) {
     _lbFotos  = typeof fotosJson === 'string' ? JSON.parse(fotosJson) : fotosJson;
     _lbActual = idx;
@@ -313,7 +313,7 @@ document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight')  lbSiguiente();
 });
 
-/* ── CAMBIAR ESTADO ─────────────────────────────────────────── */
+/*  CAMBIAR ESTADO  */
 function cambiarEstado(id, nuevoEstado, nombre) {
     const msgs = {
         ACTIVA:   `¿Aprobar y activar la cancha "${nombre}"?\nEl propietario podrá publicarla para los clientes.`,
@@ -333,7 +333,7 @@ function cambiarEstado(id, nuevoEstado, nombre) {
     });
 }
 
-/* ── ELIMINAR ───────────────────────────────────────────────── */
+/*  ELIMINAR */
 function eliminarCancha(id, nombre) {
     confirmar(
         `¿Eliminar la cancha "${nombre}"?\nSi el propietario quiere registrar otra, deberá crearla de nuevo.`,
@@ -347,7 +347,7 @@ function eliminarCancha(id, nombre) {
     );
 }
 
-/* ── Helpers ────────────────────────────────────────────────── */
+/* Helpers  */
 function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
 function esc(s) { return (s || '').replace(/'/g, "\\'"); }
 

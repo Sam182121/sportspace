@@ -23,6 +23,7 @@ public class AdminDashboardService {
     private final CanchaRepository   canchaRepository;
     private final ReservaRepository  reservaRepository;
     private final PagoRepository     pagoRepository;
+    private final SeguridadService   seguridadService;
 
     private static final DateTimeFormatter FMT_FECHA     = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FMT_ISO       = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -65,7 +66,7 @@ public class AdminDashboardService {
                 .ingresosDia(ingresosDia)
                 .ingresosMes(ingresosMes)
                 .partidosActivos(partidosActivos)
-                .usuariosConectados(0L)
+                .usuariosConectados(seguridadService.contarSesionesActivas())
                 .nuevosEsteMes(nuevosEsteMes)
                 .propietariosPendientes(0L)
                 .tieneAlertas(tieneAlertas)
@@ -268,7 +269,7 @@ public class AdminDashboardService {
                 .build();
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    //  Helpers
 
     private DashboardAlertasResponse.AlertaItem alerta(String tipo, String mensaje) {
         return DashboardAlertasResponse.AlertaItem.builder()

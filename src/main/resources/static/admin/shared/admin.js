@@ -163,10 +163,7 @@ function pedirMotivoEliminacion(nombre, onConfirm) {
     };
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Modal: motivo de BLOQUEO de cuenta (Usuarios)
-   onConfirm(motivo, comentario) se llama solo si el admin confirma.
-   ══════════════════════════════════════════════════════════════ */
+/* bloqueo */
 function pedirMotivoBloqueo(nombre, onConfirm) {
     if (document.getElementById('modalMotivoBloqueo')) document.getElementById('modalMotivoBloqueo').remove();
 
@@ -640,14 +637,14 @@ async function initAdmin() {
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
 });
-// ═══════════════════════════════════════════════════════════════════════
+
 //  NOTIFICACIONES EN VIVO
 //
 //  Fuente: GET /api/admin/seguridad/stats  →  campo intentosUltimas24h
 //  Poll automático cada 30 s (sin recargar la página)
 //  Switch "errorSistema" en Configuración activa/desactiva
 //  Click en la notificación → redirige a /admin/seguridad
-// ═══════════════════════════════════════════════════════════════════════
+
 
 (function () {
     'use strict';
@@ -658,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let _intentos = 0;   // último valor de intentosUltimas24h
     let _visto    = false; // el admin ya abrió el panel tras este valor
 
-    /* ─── config ─────────────────────────────────────────────── */
+    /* config */
     function switchActivo() {
         try {
             const raw = localStorage.getItem(CFG_KEY);
@@ -667,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch { return true; }
     }
 
-    /* ─── indicadores (dot + badge) ──────────────────────────── */
+    /* indicadores (dot + badge) */
     function actualizarIndicadores() {
         const mostrar = _intentos > 0 && switchActivo() && !_visto;
         const dot   = document.getElementById('notifDot');
@@ -676,7 +673,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (badge) badge.style.display = mostrar ? 'flex'  : 'none';
     }
 
-    /* ─── contenido del panel ─────────────────────────────────── */
+    /* contenido del panel */
     function renderPanel() {
         const list = document.getElementById('_npList');
         if (!list) return;
@@ -723,7 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
     }
 
-    /* ─── poll ────────────────────────────────────────────────── */
+    /*  poll  */
     async function poll() {
         try {
             const res = await fetch(API + '/admin/seguridad/stats', {
@@ -749,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch { /* silencioso */ }
     }
 
-    /* ─── crear panel e inyectarlo junto al botón ─────────────── */
+    /* crear panel e inyectarlo junto al botón */
     function crearPanel() {
         // Buscar el botón por id (dashboard) o por clase (resto de páginas)
         const btn = document.getElementById('notifBtn')
@@ -875,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ─── init público ────────────────────────────────────────── */
+    /* init público */
     window.initNotifSystem = function () {
         crearPanel();
         // Primer poll a 1.5 s para no bloquear el render

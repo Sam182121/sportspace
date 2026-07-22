@@ -26,9 +26,8 @@ public class PagoService {
     private final ReservaRepository reservaRepository;
     private final UsuarioRepository usuarioRepository;
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // CLIENTE
-    // ══════════════════════════════════════════════════════════════════════════
 
     /**
      * El cliente registra un pago (con voucher) para su reserva.
@@ -39,7 +38,6 @@ public class PagoService {
      *  3. Crea el pago en estado PENDIENTE con el monto de la reserva y el voucher.
      *
      * La reserva PERMANECE en estado PENDIENTE — el propietario debe aprobarla
-     * o rechazarla desde /api/propietario/reservas/{id}/aprobar|rechazar.
      */
     @Transactional
     public PagoResponse registrarPago(PagoRequest request) {
@@ -108,17 +106,10 @@ public class PagoService {
                 .stream().map(this::toResponse).toList();
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // PROPIETARIO
     // El trato es entre propietario y cliente. El propietario gestiona
     // confirmaciones, rechazos y reembolsos directamente.
-    //
-    // NOTA: la aprobación/rechazo de la RESERVA (con motivo corto) vive en
-    // PropietarioReservaController (/api/propietario/reservas/{id}/aprobar|rechazar),
-    // que también sincroniza el estado del Pago. Los métodos de abajo
-    // (confirmarPago/rechazarPago) quedan como API alternativa de solo-pago,
-    // pero el flujo principal de la app usa el controller de reservas.
-    // ══════════════════════════════════════════════════════════════════════════
 
     @Transactional
     public PagoResponse confirmarPago(Long pagoId, String notas) {
@@ -233,9 +224,8 @@ public class PagoService {
         return Map.of("totalIngresos", total);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // ADMIN — solo lectura para supervisión
-    // ══════════════════════════════════════════════════════════════════════════
 
     public List<PagoResponse> listarTodos() {
         return pagoRepository.findAllOrderByCreatedAtDesc()
@@ -246,9 +236,9 @@ public class PagoService {
         return toResponse(buscarPorId(id));
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // HELPERS PRIVADOS
-    // ══════════════════════════════════════════════════════════════════════════
+
 
     private Pago buscarPorId(Long id) {
         return pagoRepository.findById(id)

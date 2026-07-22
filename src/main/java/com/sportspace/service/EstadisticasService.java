@@ -22,9 +22,7 @@ public class EstadisticasService {
     private final PagoRepository     pagoRepository;
     private final CanchaRepository   canchaRepository;
 
-    // ══════════════════════════════════════════════════════════════════════════
     // 1. RESUMEN — /admin/estadisticas/resumen
-    // ══════════════════════════════════════════════════════════════════════════
 
     public Map<String, Object> getResumen() {
         YearMonth mes = YearMonth.now();
@@ -75,10 +73,9 @@ public class EstadisticasService {
         return res;
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // 2. USUARIOS MENSUAL — /admin/estadisticas/usuarios-mensual
-    //    Últimos 6 meses
-    // ══════════════════════════════════════════════════════════════════════════
+
 
     public Map<String, Object> getUsuariosMensual() {
         Locale localeEs = new Locale("es", "PE");
@@ -108,10 +105,10 @@ public class EstadisticasService {
         return Map.of("meses", meses, "rango", rango);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
+
     // 3. INGRESOS MENSUAL — /admin/estadisticas/ingresos-mensual
-    //    Últimos 6 meses (solo pagos aprobados, reservas no canceladas)
-    // ══════════════════════════════════════════════════════════════════════════
+    //    ultimos 6 meses (solo pagos aprobados, reservas no canceladas)
+
 
     public Map<String, Object> getIngresosMensual() {
         Locale localeEs = new Locale("es", "PE");
@@ -156,10 +153,8 @@ public class EstadisticasService {
         return Map.of("meses", meses, "rango", rango);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    // 4. CANCHAS TOP — /admin/estadisticas/canchas-top
-    //    Top 5 canchas con más reservas
-    // ══════════════════════════════════════════════════════════════════════════
+    // 4. CANCHAS  /admin/estadisticas/canchas-top
+
 
     public Map<String, Object> getCanchasTop() {
         List<Reserva> todas = reservaRepository.findAll();
@@ -184,9 +179,7 @@ public class EstadisticasService {
         return Map.of("canchas", canchas);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // 5. DEPORTES — /admin/estadisticas/deportes
-    // ══════════════════════════════════════════════════════════════════════════
 
     public Map<String, Object> getDeportes() {
         List<Object[]> rows = reservaRepository.countByDeporte();
@@ -203,10 +196,8 @@ public class EstadisticasService {
         return Map.of("deportes", deportes);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // 6. HORARIOS — /admin/estadisticas/horarios
     //    Top 5 bloques horarios más usados
-    // ══════════════════════════════════════════════════════════════════════════
 
     public Map<String, Object> getHorarios() {
         List<Reserva> todas = reservaRepository.findAll().stream()
@@ -235,10 +226,8 @@ public class EstadisticasService {
         return Map.of("horarios", horarios);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
     // 7. DIAS SEMANA — /admin/estadisticas/dias-semana
     //    Reservas por día de la semana (Lun–Dom)
-    // ══════════════════════════════════════════════════════════════════════════
 
     public Map<String, Object> getDiasSemana() {
         Locale localeEs = new Locale("es", "PE");
@@ -274,7 +263,7 @@ public class EstadisticasService {
         return Map.of("dias", dias);
     }
 
-    // ── Helper ────────────────────────────────────────────────────────────────
+    // Helper
 
     private String mesLabel(YearMonth ym, Locale locale) {
         String mes = ym.getMonth().getDisplayName(TextStyle.SHORT, locale);

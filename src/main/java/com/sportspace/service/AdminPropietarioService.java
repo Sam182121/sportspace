@@ -29,9 +29,7 @@ public class AdminPropietarioService {
     private final ReservaRepository  reservaRepository;
     private final EliminacionUsuarioService eliminacionUsuarioService;
 
-    /* ── Listar todos los propietarios ────────────────────────────
-       Para propietarios sin estadoPropietario en BD (registros viejos),
-       inferimos ACTIVO si activo=true o INACTIVO si activo=false. */
+    /* Listar todos los propietarios */
     @Transactional(readOnly = true)
     public List<PropietarioResponse> listarTodos() {
         return usuarioRepository.findByRol(Rol.PROPIETARIO)
@@ -40,13 +38,13 @@ public class AdminPropietarioService {
                 .toList();
     }
 
-    /* ── Obtener uno por ID ────────────────────────────────────── */
+    /* ── Obtener uno por ID */
     @Transactional(readOnly = true)
     public PropietarioResponse obtenerPorId(Long id) {
         return toResponse(buscarPropietario(id));
     }
 
-    /* ── Estadísticas detalladas de un propietario ────────────────
+    /* Estadísticas detalladas de un propietario
        Llamado desde el modal "Ver estadísticas" del frontend. */
     @Transactional(readOnly = true)
     public PropietarioEstadisticasResponse getEstadisticas(Long id) {
@@ -79,7 +77,7 @@ public class AdminPropietarioService {
                 .build();
     }
 
-    /* ── Cambiar estado ────────────────────────────────────────────
+    /* Cambiar estado
        El frontend envía { estado: "ACTIVO" | "PENDIENTE" | "INACTIVO" }.
        Guardamos en estadoPropietario y sincronizamos activo:
          ACTIVO   → activo = true   (puede iniciar sesión y operar)
@@ -107,13 +105,13 @@ public class AdminPropietarioService {
         return toResponse(usuarioRepository.save(p));
     }
 
-    /* ── Eliminar propietario ──────────────────────────────────────
+    /* Eliminar propietario
        Bloquea la eliminación si tiene reservas PENDIENTE o CONFIRMADA. */
     public String eliminar(Long id, String motivo, String comentario, Usuario admin, boolean forzar) {
         return eliminacionUsuarioService.eliminarOAnonimizar(id, motivo, comentario, admin, forzar);
     }
 
-    /* ── Helpers privados ──────────────────────────────────────── */
+    /* Helpers privado */
 
     private Usuario buscarPropietario(Long id) {
         Usuario u = usuarioRepository.findById(id)

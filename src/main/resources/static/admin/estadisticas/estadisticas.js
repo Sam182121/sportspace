@@ -53,7 +53,7 @@ async function cargarGraficoUsuarios() {
             const h = Math.max(Math.round((m.cantidad / max) * 110), 4);
             return `
         <div class="chart-bar-col" title="${m.label}: ${m.cantidad} usuarios">
-          <div class="chart-bar blue" style="height:${h}px"></div>
+          <div class="chart-bar blue" style="height:${h}"></div>
           <div class="chart-bar-label">${m.label}</div>
         </div>`;
         }).join('');
@@ -82,7 +82,7 @@ async function cargarGraficoIngresos() {
             const h = Math.max(Math.round((m.monto / max) * 110), 4);
             return `
         <div class="chart-bar-col" title="${m.label}: ${formatCurrency(m.monto)}">
-          <div class="chart-bar green" style="height:${h}px"></div>
+          <div class="chart-bar green" style="height:${h}"></div>
           <div class="chart-bar-label">${m.label}</div>
         </div>`;
         }).join('');
@@ -222,7 +222,7 @@ async function cargarDiasSemana() {
             const h = Math.max(Math.round((d.reservas / max) * 110), 4);
             return `
         <div class="chart-bar-col" title="${d.dia}: ${d.reservas} reservas">
-          <div class="chart-bar blue" style="height:${h}px"></div>
+          <div class="chart-bar blue" style="height:${h}"></div>
           <div class="chart-bar-label">${d.dia}</div>
         </div>`;
         }).join('');

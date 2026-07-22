@@ -80,7 +80,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-        <!-- Twilio removido. Se integrará la nueva API de SMS cuando esté disponible. -->
 
         <!-- excel-->
 

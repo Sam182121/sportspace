@@ -14,7 +14,7 @@ async function cargarPagos() {
         const data = await api.get(`/propietario/pagos/resumen?periodo=${periodo}`);
         datosPagos = data;
 
-        // ── Tarjetas de resumen (sólo ingresos CONFIRMADOS, sin canceladas) ──
+        // Tarjetas de resumen (sólo ingresos CONFIRMADOS, sin canceladas) ──
         setText('statHoy',       fmtMoney(data.ingresoHoy));
         setText('statHoySub',    `${data.reservasHoy ?? 0} reservas confirmadas`);
 
@@ -37,7 +37,7 @@ async function cargarPagos() {
         setText('statPendiente',    fmtMoney(data.ingresoPendiente));
         setText('statPendienteSub', `${data.reservasPendientesVerif ?? 0} vouchers por verificar`);
 
-        // ── Gráfico por cancha ──────────────────────────────────
+        // Gráfico por cancha
         const periodLabel = { mes:'este mes', semana:'esta semana', hoy:'hoy', '3meses':'últimos 3 meses' };
         const chartTitle = document.getElementById('chartTitle');
         if (chartTitle) chartTitle.textContent = `Ingresos por cancha — ${periodLabel[periodo] ?? periodo}`;
@@ -67,7 +67,7 @@ async function cargarPagos() {
             }
         }
 
-        // ── Tabla de últimos pagos (con estados de reembolso) ───
+        // Tabla de últimos pagos (con estados de reembolso)
         const periodoLabelEl = document.getElementById('periodoLabel');
         if (periodoLabelEl) periodoLabelEl.textContent = etiquetaPeriodo(periodo);
 
@@ -216,7 +216,7 @@ async function procesarReembolsoPago() {
     }
 }
 
-/* ── EXPORTAR A EXCEL ───────────────────────────────────────── */
+/* EXPORTAR A EXCEL */
 function exportarExcel() {
     const pagos = datosPagos?.ultimosPagos ?? [];
     if (!pagos.length) { toast('Sin datos para exportar', 'info'); return; }
@@ -259,9 +259,7 @@ function etiquetaPeriodo(periodo) {
     return { mes, semana: 'Esta semana', hoy: 'Hoy', '3meses': 'Últimos 3 meses' }[periodo] ?? mes;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MÉTODOS DE PAGO
-   ═══════════════════════════════════════════════════════════════ */
+/* MÉTODOS DE PAGO */
 
 let metodosPagoCache = [];
 let metodoPagoEditando = null; // tipo del método que se está editando/creando
@@ -474,7 +472,7 @@ async function eliminarMetodoPago(id, label) {
         toast(e.message || 'No se pudo eliminar el método de pago', 'error');
     }
 }
-/* ── LIGHTBOX (ver imagen sin salir de la página) ─────────────── */
+/*  LIGHTBOX ver imagen  */
 function verImagenZoom(url) {
     if (!url) return;
     let lb = document.getElementById('imgZoomOverlay');
