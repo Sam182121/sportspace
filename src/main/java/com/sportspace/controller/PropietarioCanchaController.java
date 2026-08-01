@@ -33,7 +33,7 @@ public class PropietarioCanchaController {
     private final FechaBloqueadaRepository fechaRepo;
     private final UsuarioRepository        usuarioRepo;
 
-    // GET /api/propietario/canchas
+    // ── GET /api/propietario/canchas ─────────────────────────────
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> listar(
             @AuthenticationPrincipal UserDetails ud) {
@@ -60,8 +60,8 @@ public class PropietarioCanchaController {
         Cancha c = new Cancha();
         c.setPropietario(prop);
         poblar(c, body);
-        c.setEstado("PENDIENTE");
-        c.setActiva(false);
+        c.setEstado("ACTIVA");
+        c.setActiva(true);
         c.setTotalReservas(0);
         c.setFotos(new ArrayList<>());
         if (c.getNombre() == null || c.getDeporte() == null || c.getPrecioHora() == null)
@@ -69,11 +69,11 @@ public class PropietarioCanchaController {
         agregarFotos(c, body);
         canchaRepo.save(c);
         return ResponseEntity.ok(Map.of(
-                "mensaje", "Cancha registrada. Espera la aprobación del administrador.",
-                "id", c.getId(), "estado", "PENDIENTE"));
+                "mensaje", "Cancha registrada y publicada.",
+                "id", c.getId(), "estado", "ACTIVA"));
     }
 
-    // PUT /api/propietario/canchas/{id}
+    // ── PUT /api/propietario/canchas/{id} ────────────────────────
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> actualizar(
             @PathVariable Long id,
@@ -107,7 +107,7 @@ public class PropietarioCanchaController {
         return ResponseEntity.ok(Map.of("mensaje", "Cancha actualizada correctamente"));
     }
 
-    // PATCH /{id}/publicar
+    // ── PATCH /{id}/publicar ─────────────────────────────────────
     @PatchMapping("/{id}/publicar")
     public ResponseEntity<Map<String, Object>> publicar(
             @PathVariable Long id,
@@ -122,7 +122,7 @@ public class PropietarioCanchaController {
         return ResponseEntity.ok(Map.of("mensaje", "Cancha publicada. Los clientes ya pueden encontrarla."));
     }
 
-    //  PATCH /{id}/despublicar
+    // ── PATCH /{id}/despublicar ──────────────────────────────────
     @PatchMapping("/{id}/despublicar")
     public ResponseEntity<Map<String, Object>> despublicar(
             @PathVariable Long id,
@@ -176,7 +176,7 @@ public class PropietarioCanchaController {
         return ResponseEntity.ok(Map.of("mensaje", "Cancha eliminada correctamente."));
     }
 
-    // DELETE /{id}/fotos/{index}
+    // ── DELETE /{id}/fotos/{index} ───────────────────────────────
     @DeleteMapping("/{id}/fotos/{index}")
     public ResponseEntity<Map<String, Object>> eliminarFoto(
             @PathVariable Long id,
@@ -192,7 +192,7 @@ public class PropietarioCanchaController {
         return ResponseEntity.ok(Map.of("mensaje", "Foto eliminada"));
     }
 
-    // Helpers
+    // ── Helpers ──────────────────────────────────────────────────
     private void poblar(Cancha c, Map<String, Object> body) {
         if (body.containsKey("nombre"))         c.setNombre(str(body, "nombre"));
         if (body.containsKey("deporte"))        c.setDeporte(str(body, "deporte"));
